@@ -204,7 +204,7 @@ function init(g){
                 continuity(x,y,[JSON.stringify([x,y])],arr);
                 $(this).addClass("null");
                 $(this).removeClass("can");
-                if(!$(".con li.can").length>r){
+                if(!($(".con li.can").length>r)){
                     $(".gmaeover .tip").html("恭喜过关了！")
                     $(".gmaeover").fadeIn(300);
                     clearInterval(timeout);
@@ -219,14 +219,14 @@ function init(g){
             }else if(arr[x][y]>0){
                 $(this).html(arr[x][y]);
                 $(this).addClass("num"+arr[x][y]).removeClass("can");
-                if(!$(".con li.can").length>r){
+                if(!($(".con li.can").length>r)){
                     $(".gmaeover .tip").html("恭喜过关了！")
                     $(".gmaeover").fadeIn(300);
                     clearInterval(timeout);
                      if($.cookie("record"+g)){
                         if(times<$.cookie("record"+g)){
                             $.cookie("record"+g,times,{"expires":365});
-                        }
+                        }！
                     }else{
                         $.cookie("record"+g,times,{"expires":365});
                     }
