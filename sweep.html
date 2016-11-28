@@ -147,7 +147,7 @@
 $(document).contextmenu(function(e){
             e.preventDefault();
 })
-var timeout=null;
+var timeout=null,cancount;
 var gradeArr=[[16,16,30],[16,16,40],[16,16,50],[20,20,60],[23,20,70],[26,20,80],[30,25,100],[33,25,100],[36,25,120],[40,25,140],[40,25,160],[40,25,200]]
 function init(g){
     if($.cookie("record"+g)){
@@ -160,6 +160,7 @@ function init(g){
         $(".record span").empty();
     }
     var w=gradeArr[g][0],h=gradeArr[g][1],r=gradeArr[g][2];
+	cancount=w*h;
     $(".grade").html("第 "+(g-0+1)+" 关 【"+r+" 个雷】")
     var string="";
     for(var i=0;i<w*h;i++){
@@ -172,13 +173,13 @@ function init(g){
     for(var i=0;i<h;i++){
         arr[i]=new Array(w);
         for(var j=0;j<w;j++){
-            arr[i][j]=null;
+            arr[i][j]=[null,0];
         }
     }
-    build(arr,r);
+    arr=build(arr,r);
     for(var i=0;i<h;i++){
         for(var j=0;j<w;j++){
-                if(arr[i][j]==-1){
+                if(arr[i][j][0]==-1){
                     newArr(arr,i,j,w,h);
                 }
         }
@@ -194,17 +195,19 @@ function init(g){
     timeout=setInterval(function(){
         times++;
         countTime();
-    },1000)
+    },1000);
     $(".con li").off("mousedown").on("mousedown",function(e){
         var v=$(this).index(".con li");
         var x=parseInt(v/w),y=v%w;
-        if($(this).hasClass("can"))
-        if(e.which==1&&!$(this).hasClass("doubt")){
-            if(arr[x][y]==undefined){
+        if(arr[x][y][1]<2)
+        if(e.which==1&&arr[x][y][1]!=1){
+            if(arr[x][y][0]==null){
+				arr[x][y][1]=2;
+				cancount--;
                 continuity(x,y,[JSON.stringify([x,y])],arr);
                 $(this).addClass("null");
                 $(this).removeClass("can");
-                if(!($(".con li.can").length>r)){
+                if(!(cancount>r)){
                     $(".gmaeover .tip").html("恭喜过关了！")
                     $(".gmaeover").fadeIn(300);
                     clearInterval(timeout);
@@ -216,11 +219,13 @@ function init(g){
                         $.cookie("record"+g,times,{"expires":365});
                     }
                 }
-            }else if(arr[x][y]>0){
-                $(this).html(arr[x][y]);
-                $(this).addClass("num"+arr[x][y]).removeClass("can");
-                if(!($(".con li.can").length>r)){
-                    $(".gmaeover .tip").html("恭喜过关了！")
+            }else if(arr[x][y][0]>0){
+                $(this).html(arr[x][y][0]);
+                $(this).addClass("num"+arr[x][y][0]).removeClass("can");
+				cancount--;
+				arr[x][y][1]=2;
+                if(!(cancount>r)){
+                    $(".gmaeover .tip").html("恭喜过关了！");
                     $(".gmaeover").fadeIn(300);
                     clearInterval(timeout);
                      if($.cookie("record"+g)){
@@ -231,17 +236,19 @@ function init(g){
                         $.cookie("record"+g,times,{"expires":365});
                     }
                 }
-            }else{
+            }else if(arr[x][y][0]==-1){
                 $(this).addClass("fa fa-certificate");
                 $(".con li").removeClass("can");
                 $(".gmaeover").fadeIn(300);
                  clearInterval(timeout);
             }
         }else if(e.which==3){
-                if($(this).hasClass("doubt")){
+                if($(this).hasClass("doubt")&&arr[x][y][1]==1){
                     $(this).removeClass("fa fa-flag doubt");
+					arr[x][y][1]=0;
                 }else{
                     $(this).addClass("fa fa-flag doubt");
+					arr[x][y][1]=1;
                 }
         }
     })
@@ -250,19 +257,20 @@ function newArr(arr,i,j,w){
     for(var n=0;n<3;n++){
             for(var m=0;m<3;m++){
                     var x1=i-1+n,x2=j-1+m;
-                    if(!(m==1&&n==1)&&arr[x1]&&arr[x1][x2]===null){
+                    if(!(m==1&&n==1)&&arr[x1]&&arr[x1][x2]&&arr[x1][x2][0]===null){
                             var num=0;
                             for(var p=0;p<3;p++){
                                 for(var q=0;q<3;q++){
-                                     num-=(arr[x1-1+p]&&arr[x1-1+p][x2-1+q]==-1)?arr[x1-1+p][x2-1+q]:0;
+                                     num-=(arr[x1-1+p]&&arr[x1-1+p][x2-1+q]&&arr[x1-1+p][x2-1+q][0]==-1)?arr[x1-1+p][x2-1+q][0]:0;
                                 }
                             }
-                            num=num==0?null:num;
-                            arr[x1][x2]=num;
+                            //num=num==0?null:num;
+                            arr[x1][x2][0]=num;
                             //$(".con li:eq("+((x1)*w+(x2))+")").html(arr[x1][x2])
                     }
             }
         }
+	return arr;
 }
 function build(arr,l){
     var i=0;
@@ -273,30 +281,38 @@ function build(arr,l){
             for(var k=0;k<arry;k++){
                 if(t==arrx*j+k){
                     i++;
-                    arr[j][k]=-1;
+                    arr[j][k][0]=-1;
+					//$(".con li:eq("+((j)*arry+(k))+")").html(arr[j][k])
+					break;
                 }
             }
         }
     }
+	return arr;
 }
 function continuity(i,j,a,arr){
     for(var n=0;n<3;n++){
-         if(arr[i-1+n]&&arr[i-1+n][j]===null&&a.indexOf(JSON.stringify([(i-1+n),j]))===-1){
+         if(arr[i-1+n]&&arr[i-1+n][j]&&arr[i-1+n][j][0]===null&&a.indexOf(JSON.stringify([(i-1+n),j]))==-1){
             var ele=$(".con li:eq("+((i-1+n)*arr[0].length+j)+")");
-            if(!ele.hasClass("doubt"))
-            ele.addClass("null").removeClass("can");
-               a.push(JSON.stringify([(i-1+n),j]));
-               a=arguments.callee((i-1+n),j,a,arr);
+            if(!arr[i-1+n][j][1]==1){
+				ele.addClass("null").removeClass("can");
+				cancount--;
+				arr[i-1+n][j][1]=2;
+				a.push(JSON.stringify([(i-1+n),j]));
+				a=arguments.callee((i-1+n),j,a,arr);
+			}
          }
     }
     for(var k=0;k<3;k++){
-        if(k!=1&&arr[i][j-1+k]===null&&a.indexOf(JSON.stringify([i,(j-1+k)]))===-1){
+        if(k!=1&&arr[i][j-1+k]&&arr[i][j-1+k][0]===null&&a.indexOf(JSON.stringify([i,(j-1+k)]))==-1){
             var ele=$(".con li:eq("+(i*arr[0].length+(j-1+k))+")");
-            if(!ele.hasClass("doubt"))
+            if(!arr[i][j-1+k][1]==1)
                 ele.addClass("null").removeClass("can");
-               a.push(JSON.stringify([i,(j-1+k)]));
+				cancount--;
+				arr[i][j-1+k][1]=2;
+                a.push(JSON.stringify([i,(j-1+k)]));
                 a=arguments.callee(i,j-1+k,a,arr);
-         }
+			}
     }
     return a;
 }
