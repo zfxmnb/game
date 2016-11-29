@@ -13,7 +13,7 @@
         *{
             padding:0;
             margin:0;
-            font-family: "Microsoft YaHei",tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
+            font-family: MicroSoft YaHei;
             -webkit-user-select:none;
             user-select:none;
         }
@@ -28,7 +28,7 @@
             border-left:1px solid gray;
             border-top:1px solid gray;
             box-shadow:0 0 5px gray;
-          margin:10px auto;
+			margin:10px auto;
         }
         .con .gmaeover{
             position: absolute;
@@ -60,19 +60,22 @@
         .con li{
             width:19px;
             height:19px;
-            border-right:1px solid gray;
-            border-bottom:1px solid gray;
-            background:#ccc;
+            border-right:1px solid #ccc;
+            border-bottom:1px solid #ccc;
+            background:#eee;
             float:left;
             cursor: pointer;
             line-height: 20px;
             text-align: center;
             font-weight: 600;
         }
+		.con li.can{
+			background:#ccc;
+			border-right:1px solid gray;
+            border-bottom:1px solid gray;
+		}
         .con li.null{
             background:#eee;
-            border-right:1px solid #ccc;
-            border-bottom:1px solid #ccc;
         }
         .con li.doubt{
             color:red;
@@ -136,7 +139,9 @@
                 </select>
                 <button class="reset">刷新</button>
             </div>
+            
     </div>
+    
     <ul class="con"></ul>
 </div>
 </body>
@@ -146,7 +151,7 @@ $(document).contextmenu(function(e){
             e.preventDefault();
 })
 var timeout=null,cancount;
-var gradeArr=[[16,16,30],[16,16,40],[16,16,50],[20,20,60],[23,20,70],[26,20,80],[30,25,90],[33,25,100],[36,25,120],[40,25,140],[40,25,160],[40,25,200]]
+var gradeArr=[[16,16,30],[16,16,40],[16,16,50],[20,20,60],[23,20,70],[26,20,80],[30,25,100],[33,25,100],[36,25,120],[40,25,140],[40,25,160],[40,25,200]]
 function init(g){
     if($.cookie("record"+g)){
         var rtimes=$.cookie("record"+g);
@@ -158,7 +163,7 @@ function init(g){
         $(".record span").empty();
     }
     var w=gradeArr[g][0],h=gradeArr[g][1],r=gradeArr[g][2];
-    cancount=w*h;
+	cancount=w*h;
     $(".grade").html("第 "+(g-0+1)+" 关 【"+r+" 个雷】")
     var string="";
     for(var i=0;i<w*h;i++){
@@ -166,7 +171,7 @@ function init(g){
     }
     string+="<div class='gmaeover'><div class='bg'></div><div class='tip'>GAME OVER</div></div>"
     $(".con").css({"width":w*20+"px","height":h*20+"px"}).html(string);
-    var listEle=$(".con li");
+
     arr=new Array(h);
     for(var i=0;i<h;i++){
         arr[i]=new Array(w);
@@ -194,15 +199,15 @@ function init(g){
         times++;
         countTime();
     },1000);
-    listEle.off("mousedown").on("mousedown",function(e){
+    $(".con li").off("mousedown").on("mousedown",function(e){
         var v=$(this).index(".con li");
         var x=parseInt(v/w),y=v%w;
         if(arr[x][y][1]<2)
         if(e.which==1&&arr[x][y][1]!=1){
             if(arr[x][y][0]==null){
-                arr[x][y][1]=2;
-                cancount--;
-                continuity(x,y,[JSON.stringify([x,y])],arr,listEle);
+				arr[x][y][1]=2;
+				cancount--;
+                continuity(x,y,[JSON.stringify([x,y])],arr);
                 $(this).addClass("null");
                 $(this).removeClass("can");
                 if(!(cancount>r)){
@@ -220,8 +225,8 @@ function init(g){
             }else if(arr[x][y][0]>0){
                 $(this).html(arr[x][y][0]);
                 $(this).addClass("num"+arr[x][y][0]).removeClass("can");
-                cancount--;
-                arr[x][y][1]=2;
+				cancount--;
+				arr[x][y][1]=2;
                 if(!(cancount>r)){
                     $(".gmaeover .tip").html("恭喜过关了！");
                     $(".gmaeover").fadeIn(300);
@@ -236,17 +241,17 @@ function init(g){
                 }
             }else if(arr[x][y][0]==-1){
                 $(this).addClass("fa fa-certificate");
-                listEle.removeClass("can");
+                $(".con li").removeClass("can");
                 $(".gmaeover").fadeIn(300);
                  clearInterval(timeout);
             }
         }else if(e.which==3){
                 if($(this).hasClass("doubt")&&arr[x][y][1]==1){
                     $(this).removeClass("fa fa-flag doubt");
-                    arr[x][y][1]=0;
+					arr[x][y][1]=0;
                 }else{
                     $(this).addClass("fa fa-flag doubt");
-                    arr[x][y][1]=1;
+					arr[x][y][1]=1;
                 }
         }
     })
@@ -266,50 +271,49 @@ function newArr(arr,i,j,w){
                     }
             }
         }
-    return arr;
+	return arr;
 }
 function build(arr,l){
     var i=0;
     var arrx=arr.length,arry=arr[0].length;
-    var length=arrx*arry;
     while(i<l){
-        var t=parseInt(Math.random()*(length-i))+1,c=0;
+        var t=parseInt(Math.random()*(arrx*arry-i));
         for(var j=0;j<arrx;j++){
             for(var k=0;k<arry;k++){
-                if(arr[j][k][0]!=-1){
-                    c++;
-                    if(t==c){
-                        i++;
-                        arr[j][k][0]=-1;
-                        break;
-                    }
-                 }
+                if(t==arrx*j+k){
+                    i++;
+                    arr[j][k][0]=-1;
+			break;
+                }
             }
         }
     }
-    return arr;
+	return arr;
 }
-function continuity(i,j,a,arr,element){
+function continuity(i,j,a,arr){
     for(var n=0;n<3;n++){
-         if(arr[i-1+n]&&arr[i-1+n][j]&&arr[i-1+n][j][0]===null&&a.indexOf(JSON.stringify([(i-1+n),j]))==-1){
-            if(!arr[i-1+n][j][1]==1){
-                element.eq((i-1+n)*arr[0].length+j).addClass("null").removeClass("can");
-                cancount--;
-                arr[i-1+n][j][1]=2;
-                a.push(JSON.stringify([(i-1+n),j]));
-                a=arguments.callee((i-1+n),j,a,arr,element);
-            }
-         }
-    }
-    for(var k=0;k<3;k++){
-        if(k!=1&&arr[i][j-1+k]&&arr[i][j-1+k][0]===null&&a.indexOf(JSON.stringify([i,(j-1+k)]))==-1){
-            if(!arr[i][j-1+k][1]==1)
-                element.eq(i*arr[0].length+(j-1+k)).addClass("null").removeClass("can");
-                cancount--;
-                arr[i][j-1+k][1]=2;
-                a.push(JSON.stringify([i,(j-1+k)]));
-                a=arguments.callee(i,j-1+k,a,arr,element);
-            }
+		for(var k=0;k<3;k++){
+			if(!(n==1&&k==1)&&arr[i-1+n]&&arr[i-1+n][j-1+k]){
+				var ele=$(".con li:eq("+((i-1+n)*arr[0].length+(j-1+k))+")");
+				 if(arr[i-1+n][j-1+k][0]===null&&a.indexOf(JSON.stringify([(i-1+n),(j-1+k)]))==-1){
+					if(!arr[i-1+n][j-1+k][1]==1){
+						ele.addClass("null").removeClass("can");
+						cancount--;
+						arr[i-1+n][j-1+k][1]=2;
+						a.push(JSON.stringify([(i-1+n),j-1+k]));
+						a=arguments.callee((i-1+n),j-1+k,a,arr);
+					}
+				 }else if(arr[i-1+n][j-1+k][0]>0){
+					if(!arr[i-1+n][j-1+k][1]==1){
+						ele.removeClass("can").addClass("num"+arr[i-1+n][j-1+k][0]);
+						ele.html(arr[i-1+n][j-1+k][0])
+						cancount--;
+						arr[i-1+n][j-1+k][1]=2;
+						
+					}
+				 }
+			 }
+		}
     }
     return a;
 }
@@ -331,5 +335,6 @@ $("#selectGrade").append(s).change(function(){
     })
 })
 })();
+
 </script>
 </html>
