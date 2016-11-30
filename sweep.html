@@ -121,12 +121,19 @@
             font-size: 16px;
             cursor:pointer;
         }
+	.fa.fa-flag{
+		color:red;
+	}
     </style>
 </head>
 <body>
 <div class="container">
     <div class="head_con">
-            <h3 class="grade"></h3>
+            <h3 class="grade">请选择难度</h3>
+		<div>
+			<i class="fa fa-certificate"></i><span class="boom"></span>&nbsp;&nbsp;
+			<i class="fa fa-flag"></i><span class="flag"></span>
+		</div>
             <div class="time">
             计时<br><span></span>
             </div>
@@ -162,9 +169,11 @@ function init(g){
     }else{
         $(".record span").empty();
     }
-    var w=gradeArr[g][0],h=gradeArr[g][1],r=gradeArr[g][2];
+    var w=gradeArr[g][0],h=gradeArr[g][1],r=gradeArr[g][2],flagCount=0;
 	cancount=w*h;
-    $(".grade").html("第 "+(g-0+1)+" 关 【"+r+" 个雷】")
+    $(".grade").html("第 "+(g-0+1)+" 关");
+	$(".boom").html(" x "+r);
+	$(".flag").html(" x "+flagCount);
     var string="";
     for(var i=0;i<w*h;i++){
         string+="<li class='can'></li>";
@@ -248,10 +257,14 @@ function init(g){
         }else if(e.which==3){
                 if($(this).hasClass("doubt")&&arr[x][y][1]==1){
                     $(this).removeClass("fa fa-flag doubt");
-					arr[x][y][1]=0;
+		    arr[x][y][1]=0;
+		    flagCount--;
+	            $(".flag").html(" x "+flagCount);
                 }else{
                     $(this).addClass("fa fa-flag doubt");
-					arr[x][y][1]=1;
+		    arr[x][y][1]=1;
+		    flagCount++;
+	            $(".flag").html(" x "+flagCount);
                 }
         }
     })
