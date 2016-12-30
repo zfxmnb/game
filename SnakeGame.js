@@ -3,7 +3,7 @@ var a,wall=[[[10,10,20,20],[30,30,40,40],[10,30,20,40],[30,10,40,20]],
             [[5,5,15,6],[5,5,6,15],[5,35,6,46],[5,45,15,46],[35,5,45,6],[45,5,46,15],[45,35,46,45],[35,45,46,46],
             [10,10,15,15],[35,10,40,15],[10,35,15,40],[35,35,40,40]],
             [[5,5,6,10],[14,5,15,10],[20,5,21,10],[30,5,31,10],[40,5,41,10],[45,5,46,10],
-            [5,23,6,28],[14,23,15,28],[20,23,21,28],[30,23,31,28],[40,23,41,28],[45,23,46,28],
+            [6,23,7,28],[15,23,16,28],[21,23,22,28],[31,23,32,28],[41,23,42,28],[46,23,47,28],
             [5,40,6,45],[14,40,15,45],[20,40,21,45],[30,40,31,45],[40,40,41,45],[45,40,46,45]]
             ],r=50,width=450,speed=1,original=140,timeout=original,hz=12,tt,grade=0,recordGrade=0;
 var direction,foodCount,foodControl,energy,score,foods,buffer,foodKeep,isStart=false,currPause=false,buffertime=0,foodtime=0,foodCountTime=0,bufferCountTime=0,bufferType=0;
@@ -15,12 +15,11 @@ var canvas=document.getElementById('con'),
     load=document.getElementById("load"),
     pause=document.getElementById("pause"),
     screenshot=document.getElementById("screenshot"),
-    titleGrade=document.getElementById("titleGrade");
+    titleGrade=document.getElementById("titleGrade"),
+    helpTip=document.getElementById("help");
 if(typeof document.ontouchstart!="undefined"){
-    var clickEvent="touch";
     var downEvent="touchstart";
 }else{
-    var clickEvent="click";
     var downEvent="mousedown";
 }
 var ctx=canvas.getContext('2d');
@@ -37,24 +36,40 @@ ctx.textBaseline="middle";
 init(7,0);
 control();
 function control(){
+    var beforeCode=0;
     document.onkeydown=function(e){
         e.preventDefault();
         if(isStart){
             if(currPause){
                pause.onclick();
-            }
-            if((e.keyCode==37||e.keyCode==65)&&direction!=4&&a[0].dir!=4){
-                direction=3;
-            }else if((e.keyCode==38||e.keyCode==87)&&direction!=2&&a[0].dir!=2){
-                direction=1;
-            }else if((e.keyCode==39||e.keyCode==68)&&direction!=3&&a[0].dir!=3){
-                direction=4;
-            }else if((e.keyCode==40||e.keyCode==83)&&direction!=1&&a[0].dir!=1){
-                direction=2;
+            }else if(e.keyCode==13||e.keyCode==32){
+                pause.onclick();
+            };
+            if(beforeCode!=17){
+                if((e.keyCode==37||e.keyCode==65)&&direction!=4&&a[0].dir!=4){
+                    direction=3;
+                }else if((e.keyCode==38||e.keyCode==87)&&direction!=2&&a[0].dir!=2){
+                    direction=1;
+                }else if((e.keyCode==39||e.keyCode==68)&&direction!=3&&a[0].dir!=3){
+                    direction=4;
+                }else if((e.keyCode==40||e.keyCode==83)&&direction!=1&&a[0].dir!=1){
+                    direction=2;
+                };
+            };
+            if(e.keyCode==17){
+                beforeCode=17;
+                document.addEventListener("keydown",function(e){
+                    if(e.keyCode==83){
+                        save.onclick();
+                    };
+                    beforeCode=0;
+                    document.removeEventListener("keydown",arguments.callee);
+                })
             }
         }
     };
-    document.body.ontouchmove=function(event){
+
+    document.ontouchmove=function(event){
         event.preventDefault();
     };
     canvas.addEventListener("touchstart",function(event){
@@ -85,11 +100,15 @@ function control(){
             });
         }
     });
-    reset.addEventListener(clickEvent,function(){
+    helpTip.onclick=function(){
+        pause.onclick();
+        alert("Ctrl+S：存档\n空格/回车：暂停\n任意键：继续");
+    };
+    reset.onclick=function(){
         clearInterval(tt);
-        init((7+grade*3),grade,grade*20);
-    });
-    save.addEventListener(clickEvent,function(){
+        init((7+grade*10),grade,grade*20);
+    };
+    save.onclick=function(){
          if(isStart){
             if(foodtime!=0)
                 foodCountTime=(foodCountTime==0?9000:foodCountTime)-(new Date().getTime()-foodtime);
@@ -99,18 +118,18 @@ function control(){
             localStorage["grade"+grade]=JSON.stringify(save);
             load.className="";
          }
-    });
-    load.addEventListener(clickEvent,function(){
+    };
+    load.onclick=function(){
          if(localStorage["grade"+grade]&&localStorage["grade"+grade]!=""){
             clearTimeout(foodKeep);
             clearInterval(buffer);
             clearInterval(tt);
             var save=JSON.parse(localStorage["grade"+grade]);
             foodCount=save[0];foodControl=save[1];energy=save[2];score=save[3];foods=save[4];isStart=save[5];timeout=save[6];currPause=save[7];a=save[8];foodCountTime=save[9];bufferCountTime=save[10];bufferType=save[11];direction=save[12];
-            init((7+grade*3),grade,grade*20,true);
+            init((7+grade*10),grade,grade*20,true);
             pause.onclick();
          }
-    });
+    };
     pause.onclick=function(){
         if(isStart){
             if(currPause){
@@ -131,6 +150,14 @@ function control(){
                 clearInterval(tt);
                 this.innerHTML="继续";
                 currPause=true;
+                build(a,grade);
+                ctx.fillStyle="rgba(150,150,150,0.5)";
+                ctx.fillRect(0,0,width,width);
+                ctx.shadowBlur=10;
+                ctx.fillStyle="rgba(255,255,255,1)";
+                ctx.font="30px MicroSoft YaHei";
+                ctx.fillText("暂停(任意键继续)",width/2,width/2,width);
+                ctx.shadowBlur=0;
             }
         }
     };
@@ -140,6 +167,7 @@ function control(){
             }
             document.getElementById("pause").innerHTML="继续";
             currPause=true;
+            build(a,grade);
             ctx.fillStyle="rgba(150,150,150,0.5)";
             ctx.fillRect(0,0,width,width);
             ctx.shadowBlur=10;
@@ -159,7 +187,7 @@ function control(){
             this.className="curr";
             clearInterval(tt);
             grade=this.getAttribute("data-grade");
-            init((7+grade*3),grade,grade*20);
+            init((7+grade*10),grade,grade*20);
             titleGrade.innerHTML=this.innerHTML;
         }
     }
@@ -449,7 +477,7 @@ function interval(a,w){
                     foodtime=0;
                     if(foods[j][4]==1){
                         score+=400;
-                        energy=2;
+                        energy=1;
                         clearInterval(tt);
                         tt=setInterval(function(){
                             interval(a,w);
@@ -465,8 +493,8 @@ function interval(a,w){
                             buffertime=0;
                         },12000)
                     }else if(foods[j][4]==2){
-                        score+=100;
-                        energy=1;
+                        score+=50;
+                        energy=2;
                         clearInterval(tt);
                         tt=setInterval(function(){
                             interval(a,w);
