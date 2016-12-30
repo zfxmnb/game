@@ -102,7 +102,9 @@ function control(){
     });
     helpTip.onclick=function(){
         pause.onclick();
-        alert("Ctrl+S：存档\n空格/回车：暂停\n任意键：继续");
+        setTimeout(function(){
+            alert("Ctrl+S：存档(保存所有状态)\n空格/回车：暂停\n任意键：继续\n\n普通食物：+50分、+1长度\n红心：+300分、+2长度、出现9秒\n加速食物：+400分、+1长度、速度加倍(12秒)、出现9秒\n减速食物：+50分、+2长度、速度减半(12秒)、出现9秒");
+        },0)
     };
     reset.onclick=function(){
         clearInterval(tt);
