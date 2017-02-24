@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.85, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.84, maximum-scale=1.0, user-scalable=0">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
     <title>经典俄罗斯方块</title>
 </head>
 <style type="text/css">
@@ -102,38 +104,42 @@
     init();
 
     document.onkeydown=function(){
-        if(!gameover&&clash)
+        if(!gameover&&clash){
             clash=false;
             if(event.keyCode==37){
                 if(vX(1)){
                     X--;
+                    if(X<0)
+                        X=0;
                     draw();
-                    clash=true;
                 }
             }else if(event.keyCode==39){
                 if(vX(-1)){
                     X++;
+                    if(X+bw>16)
+                        X=16-bw;
                     draw();
-                    clash=true;
                 }
             }else if(event.keyCode==40){
                 Y++;
                 vY();
                 draw();
-                clash=true;
             }else if(event.keyCode==38||event.keyCode==32){
                 change();
-                clash=true;
             }
+            clash=true;
+        }
     }
     leftbtn.onclick=function(){
         if(!gameover&&clash){
             clash=false;
             if(vX(1)){
                 X--;
+                if(X<0)
+                    X=0;
                 draw();
-                clash=true;
             }
+            clash=true;
         }
     };
     rightbtn.onclick=function(){
@@ -141,9 +147,11 @@
             clash=false;
             if(vX(-1)){
                 X++;
+                if(X+bw>16)
+                    X=16-bw;
                 draw();
-                clash=true;
             }
+            clash=true;
         }
     };
     downbtn.onclick=function(){
@@ -159,8 +167,8 @@
         if(!gameover&&clash){
             clash=false;
             change();
-            clash=true;
         }
+        clash=true;
     };
     resetElement.onclick=function(){
         clearInterval(to);
@@ -231,6 +239,7 @@
         t=blockObj.t;
         Y=-(1+bh);
         X=8-parseInt(bw/2);
+        gameover=false;
     }
     function score(){
         for(var i=Y;i<Y+bh;i++){
@@ -274,8 +283,11 @@
                 if(wY+i>-1&&wX+j>-1)
                 if(wblockArr[i][j]==1&&mainArr[wY+i][wX+j][0]==1){
                     v=false;
+                    break;
                 }
             }
+            if(!v)
+                break;
         }
 
         if(!v){
@@ -295,32 +307,41 @@
         var collision=true;
         for(var i=0;i<blockArr.length;i++){
             for(var j=0;j<blockArr[i].length;j++){
-                if(blockArr[i][j]==1&&(Y+i)>-1){
+                if(blockArr[i][j]==1&&(Y+i)>-1&&(Y+i)<24){
                     if(mainArr[Y+i][X+j-direction]==undefined){
                         collision=false;
+                        break;
                     }else if(mainArr[Y+i][X+j-direction][0]==1){
                         collision=false;
+                        break;
                     }
                 }
             }
+            if(!collision)
+                break;
         }
         return collision;
     }
     function vY(){
         var collision=true;
-        for(var i=0;i<blockArr.length;i++){
+        for(var i=blockArr.length-1;i>-1;i--){
             for(var j=0;j<blockArr[i].length;j++){
-                if(blockArr[i][j]==1&&(Y+i)>-1){
-                    if(Y+i+1>23||mainArr[Y+i+1][X+j][0]==1)
+                if(blockArr[i][j]==1&&(Y+i)>-1&&X>-1&&X+j<16){
+                    if(Y+i+1>23||mainArr[Y+i+1][X+j][0]==1){
                         collision=false;
+                        gameover=true;
+                        break;
+                    }
                 }
             }
+            if(!collision)
+                break;
         }
         if(!collision){
             if(Y+bh-2>0){
                 for(var i=0;i<blockArr.length;i++){
                     for(var j=0;j<blockArr[i].length;j++){
-                        if(blockArr[i][j]==1){
+                        if(blockArr[i][j]==1&&mainArr[Y+i]){
                             mainArr[Y+i][X+j]=[blockArr[i][j],fillcolor];
                         }
                     }
