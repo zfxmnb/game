@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>贪吃蛇</title>
+    <meta name="viewport" content="width=device-width,initial-scale=0.7,user-scalable=no"> 
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <style type="text/css">
+        *{
+            padding:0;
+            margin:0;
+            font-family: MicroSoft YaHei,Arial;
+        }
+        .container{
+            margin:0 auto;
+            width:450px;
+        }
+        .con{
+            width:450px;
+            height:450px;
+            border-left:1px solid #ccc;
+            border-top:1px solid #ccc;
+            box-shadow: 0 0 5px #aaa;
+        }
+        .select div{
+            text-align: center;
+            float:left;
+        }
+        .options{
+            width:60%;
+        }
+        .grade{
+            width:40%;
+        }
+        button,a{
+            text-decoration: none;
+            padding:5px;
+            background:rgb(5,156,212);
+            color:#fff;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+        button.curr{
+            background:#f50;
+        }
+        button.disable{
+            background:#999;
+            cursor:initial;
+        }
+        #head div{
+            width:33%;
+            margin:10px auto;
+            float:left;
+            font-size:14px;
+            line-height: 26px;
+        }
+        #head .title{
+            text-align: center;
+            font-size:20px;
+        }
+        .record{
+            text-align:right;
+        }
+        #help{
+            border-radius:50%;
+            display: inline-block;
+            width:16px;
+            height:16px;
+            line-height: 16px;
+            text-align: center;
+            font-size:12px;
+            color:#fff;
+            background:rgb(5,156,212);
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="head"><div class="score">分数：<span id="score">0</span></div><div class="title">贪吃蛇(<span id="titleGrade">初级</span>) <span id="help">?</span></div><div class="record">记录：<span id="record">0</span></div></div>
+        <canvas class="con" id="con" width="450px" height="450px"></canvas>
+        <div class="select">
+            <div class="options">
+                <button id="reset">重置</button>
+                <button id="pause">暂停</button>
+                <button id="save">存档</button>
+                <button id="load">载入</button>
+                <a href="" download=""  id="screenshot">截图</a>
+            </div>
+            <div class="grade">
+                <button data-grade=0 class="curr">初级</button>
+                <button data-grade=1>中级</button>
+                <button data-grade=2>高级</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('(B(){s a,G=[[[10,10,20,20],[30,30,M,M],[10,30,20,M],[30,10,M,20]],[[5,5,15,6],[5,5,6,15],[5,35,6,1A],[5,18,15,1A],[35,5,18,6],[18,5,1A,15],[18,35,1A,18],[35,18,1A,1A],[10,10,15,15],[35,10,M,15],[10,35,15,M],[35,35,M,M]],[[5,5,6,10],[14,5,15,10],[20,5,21,10],[30,5,31,10],[M,5,1M,10],[18,5,1A,10],[6,23,7,28],[15,23,16,28],[21,23,22,28],[31,23,32,28],[1M,23,2a,28],[1A,23,3L,28],[5,M,6,18],[14,M,15,18],[20,M,21,18],[30,M,31,18],[M,M,1M,18],[18,M,1A,18]]],r=1P,Q=3K,1p=1,2s=3I,1d=2s,2Z=12,I,E=0,1j=0;s l,1G,1I,1s,P,A,1x,1F,1q=C,1m=C,Y=0,1i=0,1a=0,1c=0,1B=0;s n=O.1k(\'3G\'),2g=O.1k(\'P\'),2p=O.1k(\'1V\'),2t=O.1k("2t"),1Q=O.1k("1Q"),1K=O.1k("1K"),1t=O.1k("1t"),2u=O.1k("2u"),2k=O.1k("2k"),2X=O.1k("3D");q(3A O.3v!="3s"){s o="2S"}u{s o="3o"}s p=n.3n(\'2d\');q(!p){27("你的浏览器不支持该游戏，请使用3k以上浏览器打开");1D}p.J="#3j";p.3P="#3h";p.1Y=0;p.3f="3d";p.3c="3p";1X(7,0);2N();B 2N(){s g=0;O.3a=B(e){e.2M();q(1q){q(1m){1t.1f()}u q(e.1h==13||e.1h==32){1t.1f()};q(g!=17){q((e.1h==37||e.1h==3F)&&l!=4&&a[0].v!=4){l=3}u q((e.1h==38||e.1h==3r)&&l!=2&&a[0].v!=2){l=1}u q((e.1h==39||e.1h==3J)&&l!=3&&a[0].v!=3){l=4}u q((e.1h==M||e.1h==2F)&&l!=1&&a[0].v!=1){l=2}};q(e.1h==17){g=17;O.2i("2E",B(e){q(e.1h==2F){1Q.1f()};g=0;O.2D("2E",2q.2n)})}}};O.3b=B(a){a.2M()};n.2i("2S",B(d){q(1q){s f=d.2O[0].2P,2B=d.2O[0].2G;n.2i("2I",B(e){s b=e.2L[0].2P,2U=e.2L[0].2G;s c=b-f,2h=2U-2B;q(z.2j(c)>20||z.2j(2h)>20){q(1m){1t.1f()}q(z.2j(c)>z.2j(2h)){q(c<0&&l!=4&&a[0].v!=4){l=3}u q(l!=3&&a[0].v!=3){l=4}}u{q(2h<0&&l!=2&&a[0].v!=2){l=1}u q(l!=1&&a[0].v!=1){l=2}}};n.2D("2I",2q.2n)})}});2X.1f=B(){1t.1f();1C(B(){27("3B+S：存档(保存所有状态)\\n空格/回车：暂停\\n任意键：继续\\n\\n普通食物：+1P分、+1长度\\n红心：+34分、+2长度、出现9秒\\n加速食物：+2A分、+1长度、速度加倍(12秒)、出现9秒\\n减速食物：+1P分、+2长度、速度减半(12秒)、出现9秒")},0)};2t.1f=B(){R(I);1X((7+E*10),E,E*20)};1Q.1f=B(){q(1q){q(1i!=0)1a=(1a==0?2r:1a)-(1l 1r().1v()-1i);q(Y!=0)1c=(1c==0?2m:1c)-(1l 1r().1v()-Y);s b=[1G,1I,1s,P,A,1q,1d,1m,a,1a,1c,1B,l];1b["E"+E]=2Y.3E(b);1K.1H=""}};1K.1f=B(){q(1b["E"+E]&&1b["E"+E]!=""){1O(1F);R(1x);R(I);s b=2Y.3g(1b["E"+E]);1G=b[0];1I=b[1];1s=b[2];P=b[3];A=b[4];1q=b[5];1d=b[6];1m=b[7];a=b[8];1a=b[9];1c=b[10];1B=b[11];l=b[12];1X((7+E*10),E,E*20,V);1t.1f()}};1t.1f=B(){q(1q){q(1m){1m=C;1E.1n="暂停";R(I);I=1w(B(){1u(a,E)},1d);2C(a,E)}u{1O(1F);R(1x);q(1i!=0)1a=(1a==0?2r:1a)-(1l 1r().1v()-1i);q(Y!=0)1c=(1c==0?2m:1c)-(1l 1r().1v()-Y);R(I);1E.1n="继续";1m=V;1W(a,E);p.J="2l(1J,1J,1J,0.5)";p.1Z(0,0,Q,Q);p.1Y=10;p.J="2l(1T,1T,1T,1)";p.2z="2H 2y 2x";p.2e("暂停(任意键继续)",Q/2,Q/2,Q);p.1Y=0}}};2u.2i(o,B(){q(!1m){1t.1f()}O.1k("1t").1n="继续";1m=V;1W(a,E);p.J="2l(1J,1J,1J,0.5)";p.1Z(0,0,Q,Q);p.1Y=10;p.J="2l(1T,1T,1T,1)";p.2z="2H 2y 2x";p.2e(2k.2J+"分数："+P,Q/2,Q/2,Q);p.1Y=0;1E.3i=n.3l();1E.3m=O.2K(\'3q\')[0].2J});s h=O.2K("E")[0].3x("3z");H(s i 19 h){h[i].1f=B(){H(s j 19 h){h[j].1H=""};1E.1H="3M";R(I);E=1E.3O("36-E");1X((7+E*10),E,E*20);2k.1n=1E.1n}}};B 2C(a,w){q(1a>0){1i=1l 1r().1v();1F=1C(B(){H(s i 19 A){q(A[i][4]>0){A.25(i,1);i--}};1i=0;1a=0},1a)}q(1c>0){Y=1l 1r().1v();R(I);q(1B==1){I=1w(B(){1u(a,w)},1d/2)};q(1B==2){I=1w(B(){1u(a,w)},1d*2)};1x=1C(B(){R(I);I=1w(B(){1u(a,w)},1d);Y=0;1c=0},1c)}};B 1X(g,w,b,c){q(!c){1G=1;1I=V;1s=0;P=0;A=[];1q=V;1d=2s-(b||0);1m=C,Y=0,1i=0,1a=0,1c=0,1B=0;1O(1F);R(1x);s d=1U(w);s x=1e(d/r);s y=d%r;a=1l 3e(g+1);a[0]={x:x,y:y,K:"2w",v:l};q(l==1){H(s i=0;i<g+1;i++){q(x==r-1)x=0;u x++;q(i==g-1){a[i+1]={x:x,y:y,K:"1R",v:l}}u q(i==g){a[i+1]={x:x,y:y,K:"1S",v:l}}u{a[i+1]={x:x,y:y,K:"1N",v:l}}}}u q(l==2){H(s i=0;i<g+1;i++){q(x==0)x=r-1;u x--;q(i==g-1){a[i+1]={x:x,y:y,K:"1R",v:l}}u q(i==g){a[i+1]={x:x,y:y,K:"1S",v:l}}u{a[i+1]={x:x,y:y,K:"1N",v:l}}}}u q(l==3){H(s i=0;i<g+1;i++){q(y==r-1)y=0;u y++;q(i==g-1){a[i+1]={x:x,y:y,K:"1R",v:l}}u q(i==g){a[i+1]={x:x,y:y,K:"1S",v:l}}u{a[i+1]={x:x,y:y,K:"1N",v:l}}}}u q(l==4){H(s i=0;i<g+1;i++){q(y==0)y=r-1;u y--;q(i==g-1){a[i+1]={x:x,y:y,K:"1R",v:l}}u q(i==g){a[i+1]={x:x,y:y,K:"1S",v:l}}u{a[i+1]={x:x,y:y,K:"1N",v:l}}}}29(w,0,0,[])}u{1i=0,Y=0}1Q.1H="";1K.1H="";q(!(1q&&1b["E"+E]&&1b["E"+E]!="")){1K.1H="2Q"};q(1b&&1b["1V"+w]){1j=1e(1b["1V"+w])}u{1j=0};2p.1n=1j;2g.1n=P;1W(a,w);2R(a,w)};B 1U(w){s a=1e(z.1U()*r*r);l=1e(z.1U()*4)+1;s x=1e(a/r);s y=a%r;s b=V;H(s j 19 G[w]){q(!(x<G[w][j][1]||x>G[w][j][3]-1||y<G[w][j][0]||y>G[w][j][2]-1)){b=C}u{q(1e(l/3)!=0&&!(x<G[w][j][1]||x>G[w][j][3]-1)){b=C}u q(1e(l/3)==0&&!(y<G[w][j][0]||y>G[w][j][2]-1)){b=C}}}q(b)1D a;u 1D 2q.2n(w)};B 29(w,b,c,d){s e=1e(z.1U()*(r*r-c));s N=0;H(s i=0;i<(r*r-c);i++){s f=V,x=1e(i/r),y=i%r;H(s j 19 d){q(d[j][0]==x&&d[j][0]==y){f=C}};q(f){q(N==e){x=1e(N/r),y=N%r;s g=V,1L=V,2o=V,t=0;q(b>0){s t=1;q(c==(r*r)-2)1D;q(x==r-1||y==r-1)2o=C}u{q(c==(r*r)-2){R(I);1C(B(){27("你已经厉害炸了!")},0);1D};1I=C;H(s j 19 A){q(!(x<A[j][1]-t||x>A[j][3]-1||y<A[j][0]-t||y>A[j][2]-1)){2o=C}}};H(s j 19 G[w]){q(!(x<G[w][j][1]-t||x>G[w][j][3]-1||y<G[w][j][0]-t||y>G[w][j][2]-1)){g=C}};H(s i 19 a){q(a[i].x==x&&a[i].y==y||a[i].x-t==x&&a[i].y==y||a[i].x==x&&a[i].y-t==y||a[i].x-t==x&&a[i].y-t==y){1L=C}};q(g&&1L&&2o){q(b>0){H(s i 19 A){q(A[i][4]>0){A.25(i,1);i--}};1O(1F);1i=1l 1r().1v();1F=1C(B(){H(s i 19 A){q(A[i][4]>0){A.25(i,1);i--}1i=0}},2r)};1D A.2T([x,y,(x+t+1),(y+t+1),b])}u{d.2T([x,y]);1D 2q.2n(w,b,c++,d)};U};N++}}};B 2R(a,w){I=1w(B(){1u(a,w)},1d)};B 1u(a,w){q(1I){q(1G%2Z==0&&1G!=0){29(w,1e(z.1U()*3+1),0,[])}29(w,0,0,[])};s x=a[0].x;s y=a[0].y;a[0].K="1N";q(1s==0){a[a.2c-3].K="1R";a[a.2c-2].K="1S";a.3t()}u{1s--};q(l==1){q(x==0)x=r-1p;u x-=1p}u q(l==2){q(x==r-1p)x=0;u x+=1p}u q(l==3){q(y==0)y=r-1p;u y-=1p}u q(l==4){q(y==r-1p)y=0;u y+=1p};q(l!=a[0].v)a[0].v=l+""+a[0].v;s b=V,1L=V;H(s j 19 G[w]){q(!(x<G[w][j][1]||x>G[w][j][3]-1||y<G[w][j][0]||y>G[w][j][2]-1)){b=C}};H(s i 19 a){q(a[i].x==x&&a[i].y==y){1L=C}};H(s j=0;j<A.2c;j++){q(A[j][4]>0){q(!(x<A[j][0]||x>A[j][2]-1||y<A[j][1]||y>A[j][3]-1)){Y=1l 1r().1v();1a=0;1i=0;q(A[j][4]==1){P+=2A;1s=1;R(I);I=1w(B(){1u(a,w)},1d/2);1B=1;Y=1l 1r().1v();1O(1x);1x=1C(B(){R(I);I=1w(B(){1u(a,w)},1d);Y=0},2m)}u q(A[j][4]==2){P+=1P;1s=2;R(I);I=1w(B(){1u(a,w)},1d*2);1B=2;Y=1l 1r().1v();1O(1x);1x=1C(B(){R(I);I=1w(B(){1u(a,w)},1d);Y=0},2m)}u q(A[j][4]==3){P+=34;1s=2};A.25(j,1);j--;2g.1n=P;q(P>1j){1j=P;2p.1n=1j;q(1b)1b["1V"+w]=1j}}}u{q(x==A[j][0]&&y==A[j][1]){1I=V;A.25(j,1);1s=1;1G++;j--;P+=1P;2g.1n=P;q(P>1j){1j=P;2p.1n=1j;q(1b)1b["1V"+w]=1j}}}};a.3u({x:x,y:y,K:"2w",v:l});1W(a,w);q(b&&1L){}u{R(I);1Q.1H="2Q";1q=C;1C(B(){27("亲，你脑袋撞到了呦")},0)}};B 1W(a,W){s w=Q/r;p.3w(0,0,Q,Q);p.J="#2V";p.1Z(0,0,Q,Q);H(s i 19 G[W]){p.J="3y("+(1P+W*M)+",2W,2W)";s x=G[W][i][0],y=G[W][i][1],1g=G[W][i][2]-x,2v=G[W][i][3]-y;p.1Z(x*w,y*w,1g*w,2v*w)}H(s i 19 A){p.J="#3C";s x=A[i][0],y=A[i][1],1g=A[i][2]-x,2v=A[i][3]-y;q(A[i][4]!=3){p.1o();p.L(y*w+1g*w/2,x*w+1g*w/2,1g/2*w,0,z.D*2,C);p.Z();p.T();p.2z="3H 2y 2x";p.J="#2V"}u{s m=w/8;p.1o();p.1y(y*w+8*m,x*w+3*m);p.33(y*w+12*m,x*w+-1*m,y*w+20*m,x*w+3*m,y*w+8*m,x*w+13*m);p.33(y*w+-4*m,x*w+3*m,y*w+4*m,x*w+-1*m,y*w+8*m,x*w+3*m);p.T()};q(A[i][4]>0)26(A[i][4]){X 1:p.2e("加",y*w+1g*w/2,x*w+1g*w/2,1g*w);U;X 2:p.2e("减",y*w+1g*w/2,x*w+1g*w/2,1g*w);U}};p.J="#1z";H(s i=0;i<r;i+=1p){H(s j=0;j<r;j+=1p){H(s k=1;k<a.2c;k++){q(i==a[k].x&&j==a[k].y){q(a[k].K=="1R"){p.J="#1z";q(a[k].v>10){p.1o();q(a[k].v==31||a[k].v==24){q(a[k].v==31)s x=-w/4,y=0;u s x=0,y=w/4;p.L(j*w+x,i*w+w+y,w,z.D*1.5,z.D*2,C);p.F(j*w,i*w+w)}u q(a[k].v==1M||a[k].v==23){q(a[k].v==1M)s x=w/4,y=0;u s x=0,y=w/4;p.L(j*w+w+x,i*w+w+y,w,z.D*1,z.D*1.5,C);p.F(j*w+w,i*w+w)}u q(a[k].v==32||a[k].v==14){q(a[k].v==32)s x=-w/4,y=0;u s x=0,y=-w/4;p.L(j*w+x,i*w+y,w,0,z.D*0.5,C);p.F(j*w,i*w)}u q(a[k].v==2a||a[k].v==13){q(a[k].v==2a)s x=w/4,y=0;u s x=0,y=-w/4;p.L(j*w+w+x,i*w+y,w,z.D*0.5,z.D*1,C);p.F(j*w+w,i*w)}p.Z();p.T()}u{q(a[k].v>10)s t=1e(a[k].v/10);u s t=a[k].v;p.1o();26(t){X 1:p.1y(j*w,i*w);p.F(j*w+w/4,i*w+w);p.F(j*w+w*3/4,i*w+w);p.F(j*w+w,i*w);U;X 2:p.1y(j*w,i*w+w);p.F(j*w+w/4,i*w);p.F(j*w+w*3/4,i*w);p.F(j*w+w,i*w+w);U;X 3:p.1y(j*w,i*w);p.F(j*w+w,i*w+w/4);p.F(j*w+w,i*w+w*3/4);p.F(j*w,i*w+w);U;X 4:p.1y(j*w+w,i*w);p.F(j*w,i*w+w/4);p.F(j*w,i*w+w*3/4);p.F(j*w+w,i*w+w);U;p.Z()}p.T()}}u q(a[k].K=="1S"){p.J="#1z";p.1o();q(a[k].v>10)s t=1e(a[k].v/10);u s t=a[k].v;26(t){X 1:p.1y(j*w+w/4,i*w);p.F(j*w+w/2,i*w+w);p.F(j*w+w*3/4,i*w);U;X 2:p.1y(j*w+w/4,i*w+w);p.F(j*w+w/2,i*w);p.F(j*w+w*3/4,i*w+w);U;X 3:p.1y(j*w,i*w+w/4);p.F(j*w+w,i*w+w/2);p.F(j*w,i*w+w*3/4);U;X 4:p.1y(j*w+w,i*w+w/4);p.F(j*w,i*w+w/2);p.F(j*w+w,i*w+w*3/4);U;p.Z();p.T()};p.Z();p.T()}u q(a[k].K=="1N"){q(k%2==1){p.J="#1z"}u{p.J="3N"};q(a[k].v>10){p.1o();q(a[k].v==31||a[k].v==24){p.L(j*w,i*w+w,w,z.D*1.5,z.D*2,C);p.F(j*w,i*w+w)}u q(a[k].v==1M||a[k].v==23){p.L(j*w+w,i*w+w,w,z.D*1,z.D*1.5,C);p.F(j*w+w,i*w+w)}u q(a[k].v==32||a[k].v==14){p.L(j*w,i*w,w,0,z.D*0.5,C);p.F(j*w,i*w)}u q(a[k].v==2a||a[k].v==13){p.L(j*w+w,i*w,w,z.D*0.5,z.D*1,C);p.F(j*w+w,i*w)}p.Z();p.T()}u{p.1Z(j*w,i*w,w,w)}}}}}};q(a[0].K=="2w"){p.J="#1z";p.1o();s i=a[0].x,j=a[0].y;26(a[0].v){X 1:p.L(j*w+w/2,i*w+w,w/2,z.D*1,z.D*2,C);p.Z();p.T();p.J="2b";p.1o();p.L(j*w+w/4,i*w+w,w/5,z.D*1,z.D*2,C);p.L(j*w+w*3/4,i*w+w,w/5,z.D*1,z.D*2,C);p.Z();p.2f();p.T();p.J="#1z";U;X 2:p.L(j*w+w/2,i*w,w/2,z.D*1,z.D*2,V);p.Z();p.T();p.J="2b";p.1o();p.L(j*w+w/4,i*w,w/5,0,z.D*2,C);p.L(j*w+w*3/4,i*w,w/5,0,z.D*2,C);p.Z();p.2f();p.T();p.J="#1z";U;X 3:p.L(j*w+w,i*w+w/2,w/2,z.D*0.5,z.D*1.5,C);p.Z();p.T();p.J="2b";p.1o();p.L(j*w+w,i*w+w/4,w/5,0,z.D*2,C);p.L(j*w+w,i*w+w*3/4,w/5,0,z.D*2,C);p.Z();p.2f();p.T();p.J="#1z";U;X 4:p.L(j*w,i*w+w/2,w/2,z.D*0.5,z.D*1.5,V);p.Z();p.T();p.J="2b";p.1o();p.L(j*w,i*w+w/4,w/5,0,z.D*2,C);p.L(j*w,i*w+w*3/4,w/5,0,z.D*2,C);p.Z();p.2f();p.T();p.J="#1z";U}}}})()',62,238,'||||||||||||||||||||||||||if||var||else|dir||||Math|foods|function|false|PI|grade|lineTo|wall|for|tt|fillStyle|part|arc|40||document|score|width|clearInterval||fill|break|true||case|buffertime|closePath|||||||||45|in|foodCountTime|localStorage|bufferCountTime|timeout|parseInt|onclick|Width|keyCode|foodtime|recordGrade|getElementById|new|currPause|innerHTML|beginPath|speed|isStart|Date|energy|pause|interval|getTime|setInterval|buffer|moveTo|f00|46|bufferType|setTimeout|return|this|foodKeep|foodCount|className|foodControl|150|load|v2|41|body|clearTimeout|50|save|tail|tailEnd|255|random|record|build|init|shadowBlur|fillRect||||||splice|switch|alert||food|42|yellow|length||fillText|stroke|scoreEle|cy|addEventListener|abs|titleGrade|rgba|12000|callee|v3|recordEle|arguments|9000|original|reset|screenshot|Height|head|YaHei|MicroSoft|font|400|sy|continues|removeEventListener|keydown|83|clientY|30px|touchend|innerText|getElementsByClassName|changedTouches|preventDefault|control|targetTouches|clientX|disable|action|touchstart|push|ey|fff|76|helpTip|JSON|hz||||bezierCurveTo|300||data||||onkeydown|ontouchmove|textBaseline|center|Array|textAlign|parse|333|href|FF0000|IE9|toDataURL|download|getContext|mousedown|middle|title|87|undefined|pop|unshift|ontouchstart|clearRect|getElementsByTagName|rgb|button|typeof|Ctrl|f50|help|stringify|65|con|12px|140|68|450|47|curr|green|getAttribute|shadowColor'.split('|'),0,{}))
+</script>
+</html>
