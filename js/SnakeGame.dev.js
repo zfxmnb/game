@@ -3,9 +3,9 @@ var a,wall=[[[10,10,20,20],[30,30,40,40],[10,30,20,40],[30,10,40,20]],
             [[5,5,15,6],[5,5,6,15],[5,35,6,46],[5,45,15,46],[35,5,45,6],[45,5,46,15],[45,35,46,45],[35,45,46,46],
             [10,10,15,15],[35,10,40,15],[10,35,15,40],[35,35,40,40]],
             [[5,5,6,10],[14,5,15,10],[20,5,21,10],[30,5,31,10],[40,5,41,10],[45,5,46,10],
-            [6,23,7,28],[15,23,16,28],[21,23,22,28],[31,23,32,28],[41,23,42,28],[46,23,47,28],
+            [5,23,6,28],[14,23,15,28],[20,23,21,28],[30,23,31,28],[40,23,41,28],[45,23,46,28],
             [5,40,6,45],[14,40,15,45],[20,40,21,45],[30,40,31,45],[40,40,41,45],[45,40,46,45]]
-            ],r=50,width=450,speed=1,original=140,timeout=original,hz=12,tt,grade=0,recordGrade=0;
+            ],r=50,width=450,speed=1,original=150,timeout=original,hz=10,tt,grade=0,recordGrade=0;
 var direction,foodCount,foodControl,energy,score,foods,buffer,foodKeep,isStart=false,currPause=false,buffertime=0,foodtime=0,foodCountTime=0,bufferCountTime=0,bufferType=0;
 var canvas=document.getElementById('con'),
     scoreEle=document.getElementById('score'),
@@ -15,61 +15,34 @@ var canvas=document.getElementById('con'),
     load=document.getElementById("load"),
     pause=document.getElementById("pause"),
     screenshot=document.getElementById("screenshot"),
-    titleGrade=document.getElementById("titleGrade"),
-    helpTip=document.getElementById("help");
-if(typeof document.ontouchstart!="undefined"){
-    var downEvent="touchstart";
-}else{
-    var downEvent="mousedown";
-}
-var ctx=canvas.getContext('2d');
-if(!ctx){
-    alert("你的浏览器不支持该游戏，请使用IE9以上浏览器打开");
-    return;
-}
-ctx.fillStyle="#FF0000";
-ctx.shadowColor="#333";
-ctx.shadowBlur=0;
-ctx.textAlign="center";
-ctx.textBaseline="middle";
+    titleGrade=document.getElementById("titleGrade");
 
+var ctx=canvas.getContext('2d');
+    ctx.fillStyle="#FF0000";
+    ctx.shadowColor="#333";
+    ctx.shadowBlur=0;
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
 init(7,0);
 control();
 function control(){
-    var beforeCode=0;
     document.onkeydown=function(e){
-        e.preventDefault();
         if(isStart){
             if(currPause){
                pause.onclick();
-            }else if(e.keyCode==13||e.keyCode==32){
-                pause.onclick();
-            };
-            if(beforeCode!=17){
-                if((e.keyCode==37||e.keyCode==65)&&direction!=4&&a[0].dir!=4){
-                    direction=3;
-                }else if((e.keyCode==38||e.keyCode==87)&&direction!=2&&a[0].dir!=2){
-                    direction=1;
-                }else if((e.keyCode==39||e.keyCode==68)&&direction!=3&&a[0].dir!=3){
-                    direction=4;
-                }else if((e.keyCode==40||e.keyCode==83)&&direction!=1&&a[0].dir!=1){
-                    direction=2;
-                };
-            };
-            if(e.keyCode==17){
-                beforeCode=17;
-                document.addEventListener("keydown",function(e){
-                    if(e.keyCode==83){
-                        save.onclick();
-                    };
-                    beforeCode=0;
-                    document.removeEventListener("keydown",arguments.callee);
-                })
+            }
+            if(e.keyCode==37&&direction!=4&&a[0].dir!=4){
+                direction=3;
+            }else if(e.keyCode==38&&direction!=2&&a[0].dir!=2){
+                direction=1;
+            }else if(e.keyCode==39&&direction!=3&&a[0].dir!=3){
+                direction=4;
+            }else if(e.keyCode==40&&direction!=1&&a[0].dir!=1){
+                direction=2;
             }
         }
     };
-
-    document.ontouchmove=function(event){
+    document.body.ontouchmove=function(event){
         event.preventDefault();
     };
     canvas.addEventListener("touchstart",function(event){
@@ -79,9 +52,6 @@ function control(){
                 var ex=e.changedTouches[0].clientX,ey=e.changedTouches[0].clientY;
                 var cx=ex-sx,cy=ey-sy;
                 if(Math.abs(cx)>20||Math.abs(cy)>20){
-                    if(currPause){
-                       pause.onclick();
-                    }
                     if(Math.abs(cx)>Math.abs(cy)){
                         if(cx<0&&direction!=4&&a[0].dir!=4){
                              direction=3;
@@ -100,22 +70,16 @@ function control(){
             });
         }
     });
-    helpTip.onclick=function(){
-        pause.onclick();
-        setTimeout(function(){
-            alert("Ctrl+S：存档(保存所有状态)\n空格/回车：暂停\n任意键：继续\n\n普通食物：+50分、+1长度\n红心：+300分、+2长度、出现9秒\n加速食物：+400分、+1长度、速度加倍(12秒)、出现9秒\n减速食物：+50分、+2长度、速度减半(12秒)、出现9秒");
-        },0)
-    };
     reset.onclick=function(){
         clearInterval(tt);
-        init((7+grade*10),grade,grade*20);
+        init((7+grade*3),grade,grade*20);
     };
     save.onclick=function(){
          if(isStart){
             if(foodtime!=0)
-                foodCountTime=(foodCountTime==0?9000:foodCountTime)-(new Date().getTime()-foodtime);
+                foodCountTime=(foodCountTime==0?12000:foodCountTime)-(new Date().getTime()-foodtime);
             if(buffertime!=0)
-                bufferCountTime=(bufferCountTime==0?12000:bufferCountTime)-(new Date().getTime()-buffertime);
+                bufferCountTime=(bufferCountTime==0?15000:bufferCountTime)-(new Date().getTime()-buffertime);
             var save=[foodCount,foodControl,energy,score,foods,isStart,timeout,currPause,a,foodCountTime,bufferCountTime,bufferType,direction];
             localStorage["grade"+grade]=JSON.stringify(save);
             load.className="";
@@ -128,7 +92,7 @@ function control(){
             clearInterval(tt);
             var save=JSON.parse(localStorage["grade"+grade]);
             foodCount=save[0];foodControl=save[1];energy=save[2];score=save[3];foods=save[4];isStart=save[5];timeout=save[6];currPause=save[7];a=save[8];foodCountTime=save[9];bufferCountTime=save[10];bufferType=save[11];direction=save[12];
-            init((7+grade*10),grade,grade*20,true);
+            init((7+grade*3),grade,grade*20,true);
             pause.onclick();
          }
     };
@@ -146,30 +110,22 @@ function control(){
                 clearTimeout(foodKeep);
                 clearInterval(buffer);
                 if(foodtime!=0)
-                    foodCountTime=(foodCountTime==0?9000:foodCountTime)-(new Date().getTime()-foodtime);
+                    foodCountTime=(foodCountTime==0?12000:foodCountTime)-(new Date().getTime()-foodtime);
                 if(buffertime!=0)
-                    bufferCountTime=(bufferCountTime==0?12000:bufferCountTime)-(new Date().getTime()-buffertime);
+                    bufferCountTime=(bufferCountTime==0?15000:bufferCountTime)-(new Date().getTime()-buffertime);
                 clearInterval(tt);
                 this.innerHTML="继续";
                 currPause=true;
-                build(a,grade);
-                ctx.fillStyle="rgba(150,150,150,0.5)";
-                ctx.fillRect(0,0,width,width);
-                ctx.shadowBlur=10;
-                ctx.fillStyle="rgba(255,255,255,1)";
-                ctx.font="30px MicroSoft YaHei";
-                ctx.fillText("暂停(任意键继续)",width/2,width/2,width);
-                ctx.shadowBlur=0;
             }
         }
     };
-    screenshot.addEventListener(downEvent,function(){
+    screenshot.onmousedown=function(){
+        if(isStart){
             if(!currPause){
                 pause.onclick();
             }
             document.getElementById("pause").innerHTML="继续";
             currPause=true;
-            build(a,grade);
             ctx.fillStyle="rgba(150,150,150,0.5)";
             ctx.fillRect(0,0,width,width);
             ctx.shadowBlur=10;
@@ -179,7 +135,8 @@ function control(){
             ctx.shadowBlur=0;
             this.href=canvas.toDataURL();
             this.download=document.getElementsByClassName('title')[0].innerText;
-    });
+        }
+    };
     var gradeEle=document.getElementsByClassName("grade")[0].getElementsByTagName("button");
     for(var i in gradeEle){
         gradeEle[i].onclick=function(){
@@ -189,7 +146,7 @@ function control(){
             this.className="curr";
             clearInterval(tt);
             grade=this.getAttribute("data-grade");
-            init((7+grade*10),grade,grade*20);
+            init((7+grade*3),grade,grade*20);
             titleGrade.innerHTML=this.innerHTML;
         }
     }
@@ -208,7 +165,7 @@ function continues(a,w){
         foodCountTime=0;
         },foodCountTime);
     }
-    if(bufferCountTime>0){
+    if(bufferCountTime>0){ 
         buffertime=new Date().getTime();
         clearInterval(tt);
         if(bufferType==1){
@@ -299,7 +256,7 @@ function init(g,w,sp,history){
                 }
             }
         }
-        food(w,0,0,[]);
+        food(w,0,0);
     }else{
         foodtime=0,buffertime=0;
     }
@@ -340,81 +297,60 @@ function random(w){
     else
         return arguments.callee(w);
 };
-function food(w,type,num,arr){
-    var pointer=parseInt(Math.random()*(r*r-num));
-    var N=0;
-    for(var i=0;i<(r*r-num);i++){
-        var av=true,x=parseInt(i/r),y=i%r;
-        for(var j in arr){
-            if(arr[j][0]==x&&arr[j][0]==y){
-                av=false;
+function food(w,type,num){
+    var x=parseInt(Math.random()*r),y=parseInt(Math.random()*r);
+    var v1=true,v2=true,v3=true,t=0;
+    if(type>0){
+        var t=1;
+        if(num>r*r)
+            return;
+        if(x==r-1||y==r-1)
+            return arguments.callee(w,type,num+1);
+    }else{
+        if(num>r*r){
+            clearInterval(tt);
+            return;
+        }
+        foodControl=false;
+        for(var j in foods){
+           if(!(x<foods[j][1]-t||x>foods[j][3]-1||y<foods[j][0]-t||y>foods[j][2]-1)){
+                v3=false;
             }
-        };
-        if(av){
-            if(N==pointer){
-                x=parseInt(N/r),y=N%r;
-                var v1=true,v2=true,v3=true,t=0;
-                if(type>0){
-                    var t=1;
-                    if(num==(r*r)-2)
-                        return;
-                    if(x==r-1||y==r-1)
-                        v3=false;
-                }else{
-                    if(num==(r*r)-2){
-                        clearInterval(tt);
-                        setTimeout(function(){
-                            alert("你已经厉害炸了!");
-                        },0);
-                        return;
-                    };
-                    foodControl=false;
-                    for(var j in foods){
-                       if(!(x<foods[j][1]-t||x>foods[j][3]-1||y<foods[j][0]-t||y>foods[j][2]-1)){
-                            v3=false;
-                        }
-                    }
-                };
-                for(var j in wall[w]){
-                    if(!(x<wall[w][j][1]-t||x>wall[w][j][3]-1||y<wall[w][j][0]-t||y>wall[w][j][2]-1)){
-                        v1=false;
-                    }
-                };
-                for(var i in a){
-                    if(a[i].x==x&&a[i].y==y||a[i].x-t==x&&a[i].y==y||a[i].x==x&&a[i].y-t==y||a[i].x-t==x&&a[i].y-t==y){
-                        v2=false;
-                    }
-                };
-                if(v1&&v2&&v3){
-                    if(type>0){
-                        for(var i in foods){
-                            if(foods[i][4]>0){
-                                foods.splice(i,1);
-                                i--;
-                            }
-                        };
-                        clearTimeout(foodKeep);
-                        foodtime=new Date().getTime();
-                        foodKeep=setTimeout(function(){
-                            for(var i in foods){
-                                if(foods[i][4]>0){
-                                    foods.splice(i,1);
-                                    i--;
-                                }
-                                foodtime=0;
-                            }
-                        },9000)
-                    };
-                   return foods.push([x,y,(x+t+1),(y+t+1),type]);
-                }else{ 
-                    arr.push([x,y]);
-                    return arguments.callee(w,type,num++,arr);
-                };
-                break;
+        }
+    }
+    for(var j in wall[w]){
+        if(!(x<wall[w][j][1]-t||x>wall[w][j][3]-1||y<wall[w][j][0]-t||y>wall[w][j][2]-1)){
+            v1=false;
+        }
+    }
+    for(var i in a){
+        if(a[i].x==x&&a[i].y==y||a[i].x-t==x&&a[i].y==y||a[i].x==x&&a[i].y-t==y||a[i].x-t==x&&a[i].y-t==y){
+            v2=false;
+        }
+    }
+    if(v1&&v2&&v3){
+        if(type>0){
+            for(var i in foods){
+                if(foods[i][4]>0){
+                    foods.splice(i,1);
+                    i--;
+                }
             };
-            N++;
-        }     
-    };
+            clearTimeout(foodKeep);
+            foodtime=new Date().getTime();
+            foodKeep=setTimeout(function(){
+                for(var i in foods){
+                    if(foods[i][4]>0){
+                        foods.splice(i,1);
+                        i--;
+                    }
+                    foodtime=0;
+                }
+            },12000)
+        }
+       return foods.push([x,y,(x+t+1),(y+t+1),type]);
+    }else 
+        return arguments.callee(w,type,num+1);
 };
 function action(a,w){
     tt=setInterval(function(){
@@ -424,9 +360,9 @@ function action(a,w){
 function interval(a,w){
         if(foodControl){
             if(foodCount%hz==0&&foodCount!=0){
-                food(w,parseInt(Math.random()*3+1),0,[]);
+                food(w,parseInt(Math.random()*3+1),0);
             }
-            food(w,0,0,[]);
+            food(w,0,0);
         };
         var x=a[0].x;var y=a[0].y;
         a[0].part="body";
@@ -478,8 +414,8 @@ function interval(a,w){
                     foodCountTime=0;
                     foodtime=0;
                     if(foods[j][4]==1){
-                        score+=400;
-                        energy=1;
+                        score+=200;
+                        energy=2;
                         clearInterval(tt);
                         tt=setInterval(function(){
                             interval(a,w);
@@ -493,10 +429,10 @@ function interval(a,w){
                                 interval(a,w);
                             },timeout);
                             buffertime=0;
-                        },12000)
+                        },15000)
                     }else if(foods[j][4]==2){
-                        score+=50;
-                        energy=2;
+                        score+=200;
+                        energy=1;
                         clearInterval(tt);
                         tt=setInterval(function(){
                             interval(a,w);
@@ -510,9 +446,9 @@ function interval(a,w){
                                 interval(a,w);
                             },timeout);
                             buffertime=0;
-                        },12000)
+                        },15000)
                     }else if(foods[j][4]==3){
-                        score+=300;
+                        score+=400;
                         energy=2;
                     };
                     foods.splice(j,1);
@@ -542,7 +478,7 @@ function interval(a,w){
                     }
                 }
             }
-        };
+        }
         a.unshift({x:x,y:y,part:"head",dir:direction});
         build(a,w);
         if(v1&&v2){
@@ -550,9 +486,6 @@ function interval(a,w){
             clearInterval(tt);
             save.className="disable";
             isStart=false;
-            setTimeout(function(){
-                alert("亲，你脑袋撞到了呦");
-            },0)
         }
 };
 function build(a,W){
@@ -792,4 +725,4 @@ function build(a,W){
         }
     }
 };
-})()
+})();
