@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轻音乐</title>
+    <style>
+        #select,#title,.frame{
+            margin:0 auto;
+            display: block;
+        }
+        .frame{
+            width:330px;
+        }
+        #select,#title{
+            width:310px;
+            padding:5px;
+        }
+        #select{
+            height:24px;
+            margin:20px auto;
+            border:1px solid #39f;
+            border-radius:5px;
+            width:320px;
+            height:40px;
+            line-height:40px;
+        }
+    </style>
+</head>
+<body>
+    <select name="" id="select" value=0></select>
+    <p id="title"></p>
+    <div class="frame">
+        <iframe id="frame" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src=""></iframe>
+    </div>
+    <script>
+    var music=[
+        {name:"Tokyo Love Theme",id:"27571806"},
+        {name:"은하수의 밤",id:"34040353"},
+        {name:"Petal",id:"28603973"},
+        {name:"We Meet In Dreams",id:"29103348"},
+        {name:"At the Ivy Gate",id:"19475695"},
+        {name:"人振り向いて",id:"4970195"},
+        {name:"お願いだからそんな顔しないで",id:"432506330"},
+        {name:"For River - Piano (Johnny's Version)",id:"1645112"},
+        {name:"For River - Piano (Sarah & Tommy's Version)",id:"1645079"},
+        {name:"For River - Holiday Edition",id:"402073693"},
+        {name:"ゆのはな",id:"581464"},
+        {name:"Yesterday Once More",id:"5037639"},
+        {name:"めぐり",id:"522602"},
+        {name:"What I Feel When I See Her",id:"437245125"},
+        {name:"月下に舞う",id:"32619770"},
+        {name:"이 여름도 흘러가나보다",id:"5343945"},
+        {name:"緑の座",id:"469933"},
+        {name:"Illusion",id:"28941457"},
+        {name:"다 잘 될 거야",id:"5353820"},
+        {name:"One Last Look",id:"One Last Look"},
+        {name:"autumn",id:"1091068"},
+        {name:"Morning Rain",id:"27785696"},
+        {name:"《夜色钢琴曲》童年",id:"31048288"},
+        {name:"Gracie's Theme",id:"3301896"},
+        {name:"透明な世界",id:"29418697"},
+        {name:"Terminal Station",id:"30251507"}
+    ];
+    var select=document.getElementById('select'),frame=document.getElementById('frame'),title=document.getElementById('title');
+    var options="";
+    for(var i in music){
+        options+="<option value='"+i+"'>"+music[i].name+"</option>";
+    }
+    select.innerHTML=options;
+    select.onchange=function(v){
+        var i=this.value;
+        if(!isNaN(v)){
+            i=v;
+            select.value=i;
+        }
+        title.innerHTML=music[i].name+" :"
+        frame.src="http://music.163.com/outchain/player?type=2&auto=1&height=66&id="+music[i].id;
+    }
+    select.onchange(parseInt(Math.random()*music.length));
+    </script>
+</body>
+</html>
