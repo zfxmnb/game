@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.68"> 
+    <title>解密神烦狗</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        #container{
+            width:320px;
+            height:320px;
+            margin:50px auto;
+            position: relative;
+        }
+        #container h4{
+            position: absolute;
+            top:-25px;
+            width:100%;
+            height:25px;
+        }
+        .step,#record{
+            width:50%;
+            float:left;
+        }
+        #record{
+            text-align: right;
+        }
+        #container ul{
+            list-style-type: none;
+            width:320px;
+            height:320px;
+            border:1px solid #39f;
+            background: #fff;
+            perspective-origin:50% 50%;
+            perspective: 800px;
+        }
+        #container ul li{
+            width:80px;
+            height:80px;
+            float:left;
+            transform-style: preserve-3d;
+        }
+        #container ul li div{
+            width:100%;
+            height:100%;
+        }
+        #container ul li .blockbg{
+            position: relative;
+            background:#ddd;
+        }
+        #container ul li .block{
+            position: relative;
+            transform-style: preserve-3d;
+            transition:transform 0.3s;
+        }
+        #container ul li .afterimg{
+            position: absolute;
+            top:0;
+            transform-style: preserve-3d;
+            transform:translateZ(1px);
+            background: url(doge.jpg);
+        }
+        #container ul li .rotate{
+            transform: rotate3d(0,1,0,180deg);
+        }
+        #options a{
+            display: block;
+            float:left;
+            height:50px;
+            width:50px;
+            margin:15px;
+            border-radius:50%;
+            background:#39f;
+        }
+        #row{
+            width:80px;
+            position: absolute;
+            top:0;
+            left:-80px;
+        }
+        #inca{
+            position: absolute;
+            bottom:-80px;
+            left:-80px;
+        }
+        #col{
+            position: absolute;
+            bottom:-80px;
+            left:0px;
+        }
+        #reset{
+            background:#39f;
+            display: block;
+            width:100px;
+            padding:5px 0;
+            margin:10px auto;
+            margin-top:80px;
+            color:#fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h4><div class="step">步数：<span id="step"></span></div><div id="record"></div></h4>
+        <ul id="blockCon"></ul>
+        <div id="options">
+            <div id="row">
+                <a href="javascript:void(0);" class="rowa"></a>
+                <a href="javascript:void(0);" class="rowa"></a>
+                <a href="javascript:void(0);" class="rowa"></a>
+                <a href="javascript:void(0);" class="rowa"></a>
+            </div>
+                <a href="javascript:void(0);" id="inca"></a>
+            <div id="col">
+                <a href="javascript:void(0);" class="cola"></a>
+                <a href="javascript:void(0);" class="cola"></a>
+                <a href="javascript:void(0);" class="cola"></a>
+                <a href="javascript:void(0);" class="cola"></a>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:void(0);" id="reset">重置</a>
+    <script>
+    (function(){
+        var forbid,steps,block;
+        var rowa=document.getElementsByClassName('rowa');
+        var cola=document.getElementsByClassName('cola');
+        var inca=document.getElementById('inca');
+        var step=document.getElementById('step');
+        var ul=document.getElementById('blockCon');
+        var record=document.getElementById('record');
+        var reset=document.getElementById("reset");
+        var arr=new Array(4);
+
+        init();
+        reset.onclick=function(){
+            if(!forbid)
+                init();
+        }
+        inca.onclick=function(){
+            if(!forbid){
+                forbid=true;
+                var blockarr=[];
+                for(var i=3;i>-1;i--){
+                    for(var j=0;j<4;j++){
+                        if(i+j==3){
+                            arr[i][j]=arr[i][j]==1?-1:1;
+                            var a=[i*4-(-j),i,j];
+                            blockarr.push(a);
+                        }
+                    }
+                }
+                steps++;
+                step.innerHTML=steps;
+                animation(blockarr);
+            }
+        }
+        for(var I=0;I<rowa.length;I++){
+            rowa[I].index=I;
+            rowa[I].onclick=function(){
+                var i=this.index;
+                if(!forbid){
+                    forbid=true;
+                    var blockarr=[];
+                    for(var j in arr[i]){
+                        arr[i][j]=arr[i][j]==1?-1:1;
+                        blockarr.push([i*4-(-j),i,j]);
+                    }
+                    steps++;
+                    step.innerHTML=steps;
+                    animation(blockarr);
+                }
+            }
+        }
+        for(var I=0;I<cola.length;I++){
+            cola[I].index=I;
+            cola[I].onclick=function(){
+                var j=this.index;
+                if(!forbid){
+                    forbid=true;
+                    var blockarr=[];
+                    for(var i=3;i>-1;i--){
+                        arr[i][j]=arr[i][j]==1?-1:1;
+                        blockarr.push([i*4-(-j),i,j]);
+                    }
+                    steps++;
+                    step.innerHTML=steps;
+                    animation(blockarr);
+                }
+            }
+        }
+        function init(){
+            forbid=false,steps=0;
+            step.innerHTML=0;
+            if(localStorage)
+                if(localStorage.record){
+                    record.innerHTML="最好记录: "+localStorage.record;
+                }
+            for(var i=0;i<arr.length;i++){
+                arr[i]=new Array(4);
+                for(var j=0;j<arr[i].length;j++){
+                    var mr=Math.random();
+                    if(mr<0.35){
+                        arr[i][j]=-1;
+                    }else{
+                        arr[i][j]=1;
+                    }
+                }
+            }
+            var string="";
+            for(var i=0;i<16;i++){
+                var x=i%4,y=parseInt(i/4);
+                var c="";
+                if(arr[y][x]==-1)
+                    c="rotate";
+                string+="<li><div class='block "+c+"'><div class='blockbg'></div><div class='afterimg' style='background-position:"+(-x*80)+"px "+(-y*80)+"px'></div></div></li>";
+            }
+            ul.innerHTML=string;
+            block=document.getElementsByClassName('block');
+        }
+        function animation(a){
+            if(a[0]){
+                if(arr[a[0][1]][a[0][2]]==1){
+                    block[a[0][0]].setAttribute("class","block");
+                }else{
+                    block[a[0][0]].setAttribute("class","block rotate");
+                }
+                a.shift();
+            }
+            if(a.length>0){
+                setTimeout(function(){
+                    animation(a);
+                },300)
+            }else{
+                valid();
+            }
+        }
+        function valid(){
+            var v=true;
+            for(var i in arr){
+                for(var j in arr[i]){
+                    if(arr[i][j]==-1){
+                        v=false;
+                        break;
+                    }
+                }
+                if(!v)
+                    break;
+            }
+            if(v){
+                if(localStorage){
+                    localStorage.record=steps;
+                    record.innerHTML="最好记录: "+localStorage.record;
+                }
+                setTimeout(function(){
+                    alert("你用了"+steps+"步完成");
+                },200)
+            }else{
+                forbid=false;
+            }
+        }
+    })()
+    </script>
+</body>
+</html>
