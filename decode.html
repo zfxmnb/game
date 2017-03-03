@@ -9,27 +9,34 @@
             padding:0;
             margin:0;
         }
+        ul{
+            list-style-type: none;
+        }
         #container{
             width:320px;
             height:320px;
             margin:50px auto;
             position: relative;
         }
-        #container h4{
+        #container .header{
             position: absolute;
-            top:-25px;
+            top:-30px;
             width:100%;
             height:25px;
         }
         .step,#record{
-            width:50%;
+            width:40%;
             float:left;
+        }
+        .select{
+            width:20%;
+            float:left;
+            text-align: center;
         }
         #record{
             text-align: right;
         }
-        #container ul{
-            list-style-type: none;
+        #container>ul{
             width:320px;
             height:320px;
             border:1px solid #39f;
@@ -37,13 +44,13 @@
             perspective-origin:50% 50%;
             perspective: 800px;
         }
-        #container ul li{
-            width:80px;
-            height:80px;
+        #container>ul>li{
+            width:64px;
+            height:64px;
             float:left;
             transform-style: preserve-3d;
         }
-        #container ul li div{
+        #container ul li *{
             width:100%;
             height:100%;
         }
@@ -69,26 +76,26 @@
         #options a{
             display: block;
             float:left;
-            height:50px;
-            width:50px;
-            margin:15px;
+            height:40px;
+            width:40px;
+            margin:12px;
             border-radius:50%;
             background:#39f;
         }
         #row{
-            width:80px;
+            width:64px;
             position: absolute;
             top:0;
-            left:-80px;
+            left:-64px;
         }
         #inca{
             position: absolute;
-            bottom:-80px;
-            left:-80px;
+            bottom:-64px;
+            left:-64px;
         }
         #col{
             position: absolute;
-            bottom:-80px;
+            bottom:-64px;
             left:0px;
         }
         #reset{
@@ -97,21 +104,27 @@
             width:100px;
             padding:5px 0;
             margin:10px auto;
-            margin-top:80px;
+            margin-top:64px;
             color:#fff;
             text-decoration: none;
             text-align: center;
             border-radius: 8px;
             font-size: 16px;
         }
+        #select{
+            padding:3px;
+            border:1px solid #39f;
+            border-radius:3px;
+        }
     </style>
 </head>
 <body>
     <div id="container">
-        <h4><div class="step">步数：<span id="step"></span></div><div id="record"></div></h4>
+        <div class="header"><div class="step">步数：<span id="step"></span></div><div class="select"><select id="select" value="0"></select></div><div id="record"></div></div>
         <ul id="blockCon"></ul>
         <div id="options">
             <div id="row">
+                <a href="javascript:void(0);" class="rowa"></a>
                 <a href="javascript:void(0);" class="rowa"></a>
                 <a href="javascript:void(0);" class="rowa"></a>
                 <a href="javascript:void(0);" class="rowa"></a>
@@ -123,108 +136,191 @@
                 <a href="javascript:void(0);" class="cola"></a>
                 <a href="javascript:void(0);" class="cola"></a>
                 <a href="javascript:void(0);" class="cola"></a>
+                <a href="javascript:void(0);" class="cola"></a>
             </div>
         </div>
     </div>
     <a href="javascript:void(0);" id="reset">重置</a>
     <script>
     (function(){
-        var forbid,steps,block;
-        var rowa=document.getElementsByClassName('rowa');
-        var cola=document.getElementsByClassName('cola');
+        var forbid,steps,block,level=0,clevel;
+        var rowa=(document.getElementById('row')).getElementsByTagName('a');
+        var cola=(document.getElementById('col')).getElementsByTagName('a');
         var inca=document.getElementById('inca');
         var step=document.getElementById('step');
         var ul=document.getElementById('blockCon');
         var record=document.getElementById('record');
         var reset=document.getElementById("reset");
-        var arr=new Array(4);
-
-        init();
+        var select=document.getElementById('select');
+        var optiona=document.getElementById('options').getElementsByTagName('a');
+        var arr=new Array(5);
         reset.onclick=function(){
-            if(!forbid)
-                init();
-        }
+                init(clevel);
+        };
+        select.onchange=function(){
+            clevel=this.value;
+            init(clevel);
+        };
         inca.onclick=function(){
             if(!forbid){
                 forbid=true;
                 var blockarr=[];
-                for(var i=3;i>-1;i--){
-                    for(var j=0;j<4;j++){
-                        if(i+j==3){
+                for(var i=4;i>-1;i--){
+                    for(var j=0;j<5;j++){
+                        if(i+j==4){
                             arr[i][j]=arr[i][j]==1?-1:1;
-                            var a=[i*4-(-j),i,j];
+                            var a=[i*5-(-j),i,j];
                             blockarr.push(a);
                         }
                     }
-                }
+                };
                 steps++;
                 step.innerHTML=steps;
                 animation(blockarr);
             }
-        }
+        };
         for(var I=0;I<rowa.length;I++){
             rowa[I].index=I;
             rowa[I].onclick=function(){
-                var i=this.index;
                 if(!forbid){
+                    var i=this.index;
                     forbid=true;
                     var blockarr=[];
                     for(var j in arr[i]){
                         arr[i][j]=arr[i][j]==1?-1:1;
-                        blockarr.push([i*4-(-j),i,j]);
-                    }
+                        blockarr.push([i*5-(-j),i,j]);
+                    };
                     steps++;
-                    step.innerHTML=steps;
+                    step.innerHTML=steps;console.log(blockarr);
                     animation(blockarr);
                 }
             }
-        }
+        };
         for(var I=0;I<cola.length;I++){
             cola[I].index=I;
             cola[I].onclick=function(){
-                var j=this.index;
                 if(!forbid){
+                    var j=this.index;
                     forbid=true;
                     var blockarr=[];
-                    for(var i=3;i>-1;i--){
+                    for(var i=4;i>-1;i--){
                         arr[i][j]=arr[i][j]==1?-1:1;
-                        blockarr.push([i*4-(-j),i,j]);
-                    }
+                        blockarr.push([i*5-(-j),i,j]);
+                    };
                     steps++;
                     step.innerHTML=steps;
                     animation(blockarr);
                 }
             }
-        }
-        function init(){
-            forbid=false,steps=0;
+        };
+
+        if(localStorage&&localStorage.level)
+            level=localStorage.level<9?localStorage.level:8;
+        clevel=level;
+        init(level);
+        function init(l){
+            initSelect(l);
+            steps=0;
             step.innerHTML=0;
-            if(localStorage)
-                if(localStorage.record){
-                    record.innerHTML="最好记录: "+localStorage.record;
-                }
+            if(localStorage&&localStorage["record"+l])
+                record.innerHTML="最好记录: "+localStorage["record"+l];
             for(var i=0;i<arr.length;i++){
-                arr[i]=new Array(4);
+                arr[i]=new Array(5);
                 for(var j=0;j<arr[i].length;j++){
-                    var mr=Math.random();
-                    if(mr<0.35){
-                        arr[i][j]=-1;
-                    }else{
                         arr[i][j]=1;
-                    }
                 }
-            }
+            };
             var string="";
-            for(var i=0;i<16;i++){
-                var x=i%4,y=parseInt(i/4);
+            for(var i=0;i<25;i++){
+                var x=i%5,y=parseInt(i/5);
                 var c="";
                 if(arr[y][x]==-1)
                     c="rotate";
-                string+="<li><div class='block "+c+"'><div class='blockbg'></div><div class='afterimg' style='background-position:"+(-x*80)+"px "+(-y*80)+"px'></div></div></li>";
-            }
+                string+="<li><ul class='block "+c+"'><li class='blockbg'></li><li class='afterimg' style='background-position:"+(-x*64)+"px "+(-y*64)+"px'></li></ul></li>";
+            };
             ul.innerHTML=string;
-            block=document.getElementsByClassName('block');
+            block=ul.getElementsByTagName('ul');
+            difficultyLevel(l);
+            forbid=false;
+        };
+
+        function difficultyLevel(l){
+            var k=0,lt,aa=[];
+            var rn=random(l-0+3);
+            for(var r=0;r<rn.length;r++){
+                var mr=rn[r];
+                if(mr!=lt){
+                    k++;
+                    lt=mr;
+                    aa+=mr;
+                    if(mr<5){
+                        for(var j in arr[mr]){
+                            arr[mr][j]=arr[mr][j]==1?-1:1;
+                        }
+                    }else if(mr<7){
+                        for(var i=4;i>-1;i--){
+                            for(var j=0;j<5;j++){
+                                if(i+j==4){
+                                    arr[i][j]=arr[i][j]==1?-1:1;
+                                }
+                            }
+                        }
+                    }else{
+                         for(var i=4;i>-1;i--){
+                            arr[i][mr-7]=arr[i][mr-7]==1?-1:1;
+                        }
+                    }
+                }
+            };
+            if(l>4){
+                var r=parseInt(Math.random()*25);
+                var rx=parseInt(r/5),ry=r%5;
+                arr[rx][ry]=arr[rx][ry]==1?-1:1;
+            }else if(l>6){
+                for(var i=0;i<2;i++){
+                    var r=parseInt(Math.random()*25);
+                    var rx=parseInt(r/5),ry=r%5;
+                    arr[rx][ry]=arr[rx][ry]==1?-1:1;
+                }
+            }else if(l>8){
+                for(var i=0;i<3;i++){
+                    var r=parseInt(Math.random()*25);
+                    var rx=parseInt(r/5),ry=r%5;
+                    arr[rx][ry]=arr[rx][ry]==1?-1:1;
+                }
+            }
+            for(var i=0;i<5;i++){
+                for(var j=0;j<5;j++){
+                    if(arr[i][j]==1){
+                        block[i*5+j].setAttribute("class","block");
+                    }else{
+                        block[i*5+j].setAttribute("class","block rotate");
+                    }
+                }
+            }
+        };
+
+        function random(l){
+            var ra=[],i=0,t;
+            while(i<l){
+                var k=parseInt(Math.random()*12);
+                if(k!=t){
+                    ra.push(k);
+                    i++;
+                }
+            }
+            return ra;
         }
+
+        function initSelect(l){
+            var option="";
+            for(var i=0;i<level-0+1;i++){
+                option+="<option value='"+i+"'>关卡"+(i+1)+"</option>";
+            }
+            select.innerHTML=option;
+            select.value=l;
+        };
+
         function animation(a){
             if(a[0]){
                 if(arr[a[0][1]][a[0][2]]==1){
@@ -233,15 +329,15 @@
                     block[a[0][0]].setAttribute("class","block rotate");
                 }
                 a.shift();
-            }
+            };
             if(a.length>0){
                 setTimeout(function(){
                     animation(a);
-                },300)
+                },200)
             }else{
                 valid();
             }
-        }
+        };
         function valid(){
             var v=true;
             for(var i in arr){
@@ -253,14 +349,26 @@
                 }
                 if(!v)
                     break;
-            }
+            };
             if(v){
                 if(localStorage){
-                    localStorage.record=steps;
-                    record.innerHTML="最好记录: "+localStorage.record;
+                    if(localStorage["record"+clevel]){
+                        if(steps<localStorage["record"+clevel]){
+                            localStorage["record"+clevel]=steps;
+                            record.innerHTML="最好记录: "+steps;
+                        }
+                    }else{
+                        localStorage["record"+clevel]=steps;
+                        record.innerHTML="最好记录: "+steps;
+                    }
+                    clevel++;
+                    clevel=clevel<9?clevel:8;
+                    if(clevel>level)
+                        localStorage.level=level;
                 }
                 setTimeout(function(){
                     alert("你用了"+steps+"步完成");
+                    init(clevel)
                 },200)
             }else{
                 forbid=false;
