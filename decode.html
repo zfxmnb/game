@@ -365,6 +365,9 @@
                     clevel=clevel<9?clevel:8;
                     if(clevel>level)
                         localStorage.level=level;
+                }else{
+                    clevel++;
+                    clevel=clevel<9?clevel:8;
                 }
                 setTimeout(function(){
                     alert("你用了"+steps+"步完成");
