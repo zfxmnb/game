@@ -8,7 +8,7 @@
     var mainArr,blockObj,prepareObj,blockArr,bw,bh,type,ptype,t,status,pstatus,X,Y,fillcolor,center,bottom,initTimeout=400,rank=0,timeout=initTimeout,to,gameover=false,scores=0,pause=false;
 
     init();
-
+    //控制操作
     document.onkeydown=function(){
         if(!gameover){
             if(event.keyCode==37){
@@ -63,15 +63,18 @@
             }
         }
     };
+    //旋转
     changebtn.onclick=function(){
         if(!gameover){
             change();
         }
     };
+    //重置
     resetElement.onclick=function(){
         clearInterval(to);
         init();
     };
+    //暂停
     pauseElement.onclick=function(){
         if(pause){
             to=setInterval(function(){
@@ -89,7 +92,7 @@
             this.innerHTML="继续"
         }
     };
-
+    //初始化
      function init(){
         gameover=false;
         scores=0;
@@ -118,6 +121,7 @@
             }
         },timeout);
      };
+     //右侧下一次方块提示
      function blocktip(obj){
         ctxtip.clearRect(0,0,80,80);
         var x=2-obj.w/2,y=2-obj.h/2,t=obj.t,arr=obj.block;
@@ -143,6 +147,7 @@
         X=8-parseInt(bw/2);
         gameover=false;
     }
+    //计算分数，消除一个小块增加一分
     function score(){
         for(var i=Y;i<Y+bh;i++){
             var v=true;
@@ -174,10 +179,12 @@
             }
         }
     }
+    //改变方块方向
     function change(){
         status++;
         if(status==4)
             status=0;
+        //方块变换方向
         var wblockObj=random(type,status);
         var wblockArr=wblockObj.block;
         var wbw=wblockObj.w;
@@ -190,7 +197,7 @@
             wX=0;
         var wY=bottom-wbh;
         var v=true;
-
+        //判断有没有足够空间
         for(var i=0;i<wblockArr.length;i++){
             for(var j=0;j<wblockArr[i].length;j++){
                 if(wY+i>-1&&wX+j>-1)
@@ -202,7 +209,6 @@
             if(!v)
                 break;
         }
-
         if(!v){
             status--;
         }else{
@@ -215,7 +221,7 @@
             draw();
         }
     }
-
+    //左右移动时判断左右障碍物
     function vX(direction){
         var collision=true;
         for(var i=0;i<blockArr.length;i++){
@@ -235,8 +241,10 @@
         }
         return collision;
     }
+    //判断下方障碍物，如果有障碍物就停止
     function vY(){
         var collision=true;
+        //从下落方块下最下面判断有没有碰到障碍物，只要有一个碰到障碍物就停止
         for(var i=blockArr.length-1;i>-1;i--){
             for(var j=0;j<blockArr[i].length;j++){
                 if(blockArr[i][j]==1&&(Y+i)>-1&&X>-1&&X+j<16){
@@ -250,6 +258,7 @@
             if(!collision)
                 break;
         }
+        //判断方块有没有超出顶部
         if(!collision){
             if(Y>-1){
                 for(var i=0;i<blockArr.length;i++){
@@ -270,6 +279,7 @@
             }
         }
     }
+    //绘制
     function draw(){
         ctx.clearRect(0,0,320,480)
         grid();
@@ -279,6 +289,7 @@
         mainDraw()
         blockDraw(t,blockArr,X,Y,ctx);
     }
+    //不同方块对应不同颜色
     function blockDraw(t,arr,x,y,cvs){
         switch(t){
             case 0:
@@ -319,7 +330,7 @@
             }
         }
     }
-
+    //绘制背景表格
     function grid(){
         ctx.fillStyle='#ddd';
         for(var i=1;i<16;i++){
@@ -329,7 +340,7 @@
             ctx.fillRect(0,j*20,320,1)
         }
     }
-
+    //生成的随机方块的形状
     function random(t,s){
         var type=t;
         var arr=[];

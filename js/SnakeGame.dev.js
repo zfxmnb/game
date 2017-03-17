@@ -1,4 +1,5 @@
 (function(){
+//障碍物设置
 var a,wall=[[[10,10,20,20],[30,30,40,40],[10,30,20,40],[30,10,40,20]],
             [[5,5,15,6],[5,5,6,15],[5,35,6,46],[5,45,15,46],[35,5,45,6],[45,5,46,15],[45,35,46,45],[35,45,46,46],
             [10,10,15,15],[35,10,40,15],[10,35,15,40],[35,35,40,40]],
@@ -23,7 +24,9 @@ var ctx=canvas.getContext('2d');
     ctx.shadowBlur=0;
     ctx.textAlign="center";
     ctx.textBaseline="middle";
+//初次进入初始化
 init(7,0);
+//添加控制
 control();
 function control(){
     document.onkeydown=function(e){
@@ -42,6 +45,7 @@ function control(){
             }
         }
     };
+    //禁用移动端默认事件
     document.body.ontouchmove=function(event){
         event.preventDefault();
     };
@@ -70,10 +74,12 @@ function control(){
             });
         }
     });
+    //重置
     reset.onclick=function(){
         clearInterval(tt);
         init((7+grade*3),grade,grade*20);
     };
+    //存档
     save.onclick=function(){
          if(isStart){
             if(foodtime!=0)
@@ -85,6 +91,7 @@ function control(){
             load.className="";
          }
     };
+    //加载存档
     load.onclick=function(){
          if(localStorage["grade"+grade]&&localStorage["grade"+grade]!=""){
             clearTimeout(foodKeep);
@@ -96,6 +103,7 @@ function control(){
             pause.onclick();
          }
     };
+    //暂停
     pause.onclick=function(){
         if(isStart){
             if(currPause){
@@ -119,6 +127,7 @@ function control(){
             }
         }
     };
+    //截屏
     screenshot.onmousedown=function(){
         if(isStart){
             if(!currPause){
@@ -137,6 +146,7 @@ function control(){
             this.download=document.getElementsByClassName('title')[0].innerText;
         }
     };
+    //选择难度
     var gradeEle=document.getElementsByClassName("grade")[0].getElementsByTagName("button");
     for(var i in gradeEle){
         gradeEle[i].onclick=function(){
@@ -151,21 +161,23 @@ function control(){
         }
     }
 };
+//继续
 function continues(a,w){
     if(foodCountTime>0){
         foodtime=new Date().getTime();
-        foodKeep=setTimeout(function(){
+        foodKeep=setTimeout(function(){//重新设置限时食物的限时事件
             for(var i in foods){
                 if(foods[i][4]>0){
                     foods.splice(i,1);
                     i--;
                 }
             };
-        foodtime=0;
-        foodCountTime=0;
+            foodtime=0;
+            foodCountTime=0;
         },foodCountTime);
     }
-    if(bufferCountTime>0){ 
+    //从新设置buffer效果
+    if(bufferCountTime>0){
         buffertime=new Date().getTime();
         clearInterval(tt);
         if(bufferType==1){
@@ -188,6 +200,7 @@ function continues(a,w){
         },bufferCountTime)
     }
 };
+//初始化
 function init(g,w,sp,history){
     if(!history){
         foodCount=1;foodControl=true;energy=0;score=0;foods=[];isStart=true;timeout=original-(sp||0);currPause=false,buffertime=0,foodtime=0,foodCountTime=0,bufferCountTime=0,bufferType=0;
@@ -196,7 +209,7 @@ function init(g,w,sp,history){
         var start=random(w);
         var x=parseInt(start/r);
         var y=start%r;
-
+        //设置不同朝向的蛇体
         a=new Array(g+1);
         a[0]={x:x,y:y,part:"head",dir:direction};
         if(direction==1){
@@ -262,6 +275,7 @@ function init(g,w,sp,history){
     }
     save.className="";
     load.className="";
+    //无存档禁用load
     if(!(isStart&&localStorage["grade"+grade]&&localStorage["grade"+grade]!="")){
         load.className="disable";
     };
@@ -275,6 +289,7 @@ function init(g,w,sp,history){
     build(a,w);
     action(a,w);
 };
+//返回一个不会撞墙的蛇头位置
 function random(w){
     var start=parseInt(Math.random()*r*r);
     direction=parseInt(Math.random()*4)+1;
@@ -297,6 +312,7 @@ function random(w){
     else
         return arguments.callee(w);
 };
+//生成不与食物、蛇体和墙冲突的食物
 function food(w,type,num){
     var x=parseInt(Math.random()*r),y=parseInt(Math.random()*r);
     var v1=true,v2=true,v3=true,t=0;
@@ -349,14 +365,16 @@ function food(w,type,num){
             },12000)
         }
        return foods.push([x,y,(x+t+1),(y+t+1),type]);
-    }else 
+    }else
         return arguments.callee(w,type,num+1);
 };
+//执行运动
 function action(a,w){
     tt=setInterval(function(){
         interval(a,w);
     },timeout)
 };
+
 function interval(a,w){
         if(foodControl){
             if(foodCount%hz==0&&foodCount!=0){
@@ -366,6 +384,7 @@ function interval(a,w){
         };
         var x=a[0].x;var y=a[0].y;
         a[0].part="body";
+        //蛇体增长
         if(energy==0){
             a[a.length-3].part="tail";
             a[a.length-2].part="tailEnd";
@@ -373,6 +392,7 @@ function interval(a,w){
         }else{
             energy--;
         };
+        //不同朝向不同移动方向
         if(direction==1){
             if(x==0)
                 x=r-speed;
@@ -413,7 +433,7 @@ function interval(a,w){
                     buffertime=new Date().getTime();
                     foodCountTime=0;
                     foodtime=0;
-                    if(foods[j][4]==1){
+                    if(foods[j][4]==1){//加速buffer
                         score+=200;
                         energy=2;
                         clearInterval(tt);
@@ -430,7 +450,7 @@ function interval(a,w){
                             },timeout);
                             buffertime=0;
                         },15000)
-                    }else if(foods[j][4]==2){
+                    }else if(foods[j][4]==2){//减速buffer
                         score+=200;
                         energy=1;
                         clearInterval(tt);
@@ -447,7 +467,7 @@ function interval(a,w){
                             },timeout);
                             buffertime=0;
                         },15000)
-                    }else if(foods[j][4]==3){
+                    }else if(foods[j][4]==3){//红心加分
                         score+=400;
                         energy=2;
                     };
@@ -462,6 +482,7 @@ function interval(a,w){
                     }
                 }
             }else{
+                //豆子加分
                 if(x==foods[j][0]&&y==foods[j][1]){
                     foodControl=true;
                     foods.splice(j,1);
@@ -482,22 +503,25 @@ function interval(a,w){
         a.unshift({x:x,y:y,part:"head",dir:direction});
         build(a,w);
         if(v1&&v2){
-        }else{
+        }else{//撞墙 game over
             clearInterval(tt);
             save.className="disable";
             isStart=false;
         }
 };
+//重新绘制整个画面
 function build(a,W){
     var w=width/r;
     ctx.clearRect(0,0,width,width);
     ctx.fillStyle="#fff";
     ctx.fillRect(0,0,width,width);
+    //绘制墙壁
     for(var i in wall[W]){
             ctx.fillStyle="rgb("+(50+W*40)+",76,76)";
             var x=wall[W][i][0],y=wall[W][i][1],Width=wall[W][i][2]-x,Height=wall[W][i][3]-y;
             ctx.fillRect(x*w,y*w,Width*w,Height*w);
     }
+    //绘制食物
     for(var i in foods){
             ctx.fillStyle="#f50";
             var x=foods[i][0],y=foods[i][1],Width=foods[i][2]-x,Height=foods[i][3]-y;
@@ -533,7 +557,7 @@ function build(a,W){
                 if(i==a[k].x&&j==a[k].y){
                     if(a[k].part=="tail"){
                         ctx.fillStyle="#f00";
-                        if(a[k].dir>10){
+                        if(a[k].dir>10){//绘制转弯时的蛇尾
                             ctx.beginPath();
                             if(a[k].dir==31||a[k].dir==24){
                                 if(a[k].dir==31)
@@ -566,7 +590,7 @@ function build(a,W){
                             }
                             ctx.closePath();
                             ctx.fill();
-                        }else{
+                        }else{//绘制不同朝向的蛇尾
                             if(a[k].dir>10)
                                 var t=parseInt(a[k].dir/10);
                             else
@@ -601,7 +625,7 @@ function build(a,W){
                             }
                             ctx.fill();
                         }
-                    }else if(a[k].part=="tailEnd"){
+                    }else if(a[k].part=="tailEnd"){//绘制不同朝向的尾尖
                         ctx.fillStyle="#f00";
                         ctx.beginPath();
                         if(a[k].dir>10)
@@ -634,7 +658,7 @@ function build(a,W){
                         };
                         ctx.closePath();
                         ctx.fill();
-                    }else if(a[k].part=="body"){
+                    }else if(a[k].part=="body"){//绘制蛇身
                         if(k%2==1){
                             ctx.fillStyle="#f00";
                         }else{
@@ -665,6 +689,7 @@ function build(a,W){
             }
         }
     };
+    //绘制蛇头
     if(a[0].part=="head"){
         ctx.fillStyle="#f00";
         ctx.beginPath();

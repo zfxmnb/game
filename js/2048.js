@@ -1,15 +1,26 @@
 
     $(function(){
-        var list,listDiv,arr,hScore=0,nScore=0,oCount=0,liCon=$(".li_con"),container=$(".container"),reset=$(".reset");
+        var list,
+	        listDiv,
+	        arr,
+	        hScore=0,
+	        nScore=0,
+	        oCount=0,
+	        liCon=$(".li_con"),
+	        container=$(".container"),
+	        reset=$(".reset");
+	     //从cookie获取最高分记录
         if($.cookie("hScore")){
             hScore=$.cookie("hScore");
         }
+        //初始化
         var init=function(n){
             var s="";
             for(var i=0;i<n*n;i++){
                 s+="<li><div class='hide'></div></li>";
             }
             $(".li_con").html(s);
+        	//生成所需的HTML机构
             list=$(".li_con li"),listDiv=$(".li_con li div");
             arr=[],oCount=0;
             for(var i=0;i<n;i++){
@@ -19,7 +30,9 @@
                     listDiv.eq(i*4+j).css({"top":i*80+1.5+"px","left":j*80+1.5+"px"});
                }
             }
+            //空白位置随机生成数字块
             random(n,2);
+            //绑定事件
 			bind();
         }
         var random=function(n,r){
@@ -35,6 +48,7 @@
                 }
             }
         }
+        //过渡动画
         var animate=function(reverse,n,i,j,l){
             switch (reverse){
                 case "left":
@@ -51,10 +65,10 @@
                     break;
             }
         }
-     
+        //操作执行事件
         var left=function(n){
             cloneArr=clone(arr);
-            var sumTempArr=[];
+            var sumTempArr=[];//一个朝一个方向滑动生成的新数组
             for(var i=0;i<n;i++){
                 var tempArr=[],x=0;
                 for(var j=0;j<n;j++){
@@ -63,7 +77,7 @@
                         tempArr.push(arr[i][j])
                         x++;
                     }
-                } 
+                }
                 sumTempArr.push(algorithm(tempArr));
             }
             setTimeout(function(){
@@ -93,9 +107,8 @@
                     if(arr[i][j]!=0){
                         animate("right",n,i,j,tempArr.length);
                         tempArr.push(arr[i][j])
-                    
                     }
-                } 
+                }
                 sumTempArr.push(algorithm(tempArr));
             }
             setTimeout(function(){
@@ -126,7 +139,7 @@
                         animate("top",n,i,j,tempArr.length);
                         tempArr.push(arr[j][i]);
                     }
-                } 
+                }
                 sumTempArr.push(algorithm(tempArr));
             }
             setTimeout(function(){
@@ -158,7 +171,7 @@
                         animate("bottom",n,i,j,tempArr.length);
                         tempArr.push(arr[j][i])
                     }
-                } 
+                }
                 sumTempArr.push(algorithm(tempArr));
             }
             setTimeout(function(){
@@ -179,9 +192,10 @@
                 bind();
             },300)
         }
+        //递归方式处理数之间的合并
         var algorithm=function(a){
-            for(var i=0;i<a.length;i++){
-                if(i>0&&a[i-1]==a[i]){
+            for(var i=1;i<a.length;i++){
+                if(a[i-1]==a[i]){
                     a[i-1]=a[i-1]*2;
                     a.splice(i,1);
                     return arguments.callee(a);
@@ -191,12 +205,14 @@
             if(i==a.length)
                 return a;
         }
+        //回复滑块位置，刷新滑块内容
         var refresh=function(i,j){
-            listDiv.eq(i*4+j).attr("class","").addClass("hide").empty().css({"top":i*80+1.5+"px","left":j*80+1.5+"px"});;
+            listDiv.eq(i*4+j).attr("class","").addClass("hide").empty().css({"top":i*80+1.5+"px","left":j*80+1.5+"px"});
             if(arr[i][j]!=0){
                 listDiv.eq(i*4+j).html(arr[i][j]).removeClass("hide").addClass("show").addClass("x"+arr[i][j]);
             }
         }
+        //克隆数组
         var clone=function(a){
             var clonearr=[];
             for(var i=0;i<a.length;i++){
@@ -207,6 +223,7 @@
             }
             return clonearr;
         }
+        //检查分数并保存最新记录
         var check=function(a){
             var s=0;
             for(var i=0;i<a.length;i++){
@@ -234,7 +251,7 @@
             $(".hscore span").html(hScore);
             $(".nscore span").html(nScore);
         }
-        
+        //绑定事件
         var bind=function(){
              $(document).on("keydown",function(e){
                 liCon.addClass("transition");
@@ -279,15 +296,17 @@
                 });
             });
         }
+        //防止未执行完的再次操作处理
         var unbind=function(){
             container.off("touchstart touchend");
             $(document).off("keydown");
             reset.off("click touch");
         }
-        //执行
+        //禁用移动端的浏览器滑动默认事件
         $(document).on("touchmove",function(e2){
                  e2.preventDefault();
         });
+        //开始
 		if($.cookie("arr")){
 			if(confirm("是否从上次保存节点开始")){
 				arr=JSON.parse($.cookie("arr"));
