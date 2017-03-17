@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插针游戏</title>
+    <meta name="viewport" content="width=device-width,initial-scale=0.7,user-scalable=no"> 
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <script src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+            *{
+                margin:0;
+                padding:0;
+            }
+            ul{
+                list-style-type: none;
+            }
+            .container{
+                width:400px;
+                height:690px;
+                margin:0 auto;
+                position: relative;
+            }
+            .rotate{
+                width:400px;
+                height:400px;
+                position: relative;
+            }
+            .center{
+                width:120px;
+                height:120px;
+                position: absolute;
+                left:50%;
+                top:50%;
+                margin-left:-60px;
+                margin-top:-60px;
+                background:#333;
+                border-radius: 50%;
+                -webkit-transform:translate3d(0,0,0);
+                transform:translate3d(0,0,0);
+                 -webkit-transform-origin:center center;
+                transform-origin:center center;
+                -webkit-will-change:transform;
+                will-change:transform; 
+            }
+            .needle{
+                width:2px;
+                height:120px;
+                position: absolute;
+                left:50%;
+                margin-left:-1px;
+                top:480px;
+                background:#333;
+                -webkit-will-change:top;
+                will-change:top;
+                -webkit-transition:top 0.2s;
+                transition:top 0.2s;
+                box-shadow: 0 0 1px #333;
+            }
+            .needle.moment{
+                -webkit-transition:top 0s;
+                transition:top 0s;
+            }
+           .center .needle{
+                top:120px;
+                -webkit-transform-origin:center -60px;
+                transform-origin:center -60px;
+            }
+            .needle div{
+                width:30px;
+                height:30px;
+                border-radius: 50%;
+                background:#333;
+                position: absolute;
+                bottom:-15px;
+                left:50%;
+                margin-left: -15px;
+            }
+            .needles{
+                position: absolute;
+                bottom:0;
+                width:400px;
+                text-align: center
+            }
+            .needles li{
+                width:30px;
+                height:30px;
+                border-radius: 50%;
+                background:#333;
+                display: inline-block;
+                margin:2px;
+            }
+            .custom{
+                position: absolute;
+                top:0px;
+                width:100%;
+                text-align: left;
+				text-indent:2em;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            @keyframes rotate{
+                from{transform:rotate(0deg);}
+                to{transform:rotate(360deg);}
+            }
+            @-webkit-keyframes rotate{
+                from{-webkit-transform:rotate(0deg);}
+                to{-webkit-transform:rotate(360deg);}
+            }
+            @keyframes rrotate{
+                from{transform:rotate(0deg);}
+                to{transform:rotate(-360deg);}
+            }
+            @-webkit-keyframes rrotate{
+                from{-webkit-transform:rotate(0deg);}
+                to{-webkit-transform:rotate(-360deg);}
+            }
+    </style>
+</head>
+<body>
+            <div class="container">
+                    <p class="custom"></p>
+                    <div class="rotate">
+                            <div class="center"></div>
+                    </div>
+                    <div class="needle"><div class="dot"></div></div>
+                    <ul class="needles"></ul>
+            </div>
+            <script src="js/jfcz.js"></script>
+</body>
+</html>

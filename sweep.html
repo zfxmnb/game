@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+       <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=0.98,user-scalable=no"> 
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <title>扫雷</title>
+    <script src="https://apps.bdimg.com/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/fontawesome/4.0.3/css/font-awesome.css">
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            font-family: MicroSoft YaHei;
+            -webkit-user-select:none;
+            user-select:none;
+        }
+        .container{
+            text-align: center;
+        }
+        .con{
+            position: relative;
+            list-style-type: none;
+            width:320px;
+            height:320px;
+            border-left:1px solid gray;
+            border-top:1px solid gray;
+            box-shadow:0 0 5px gray;
+			margin:10px auto;
+        }
+        .con .gmaeover{
+            position: absolute;
+            width:100%;
+            height:100%;
+            top:0;
+            left:0;
+            display: none;
+        }
+        .con .gmaeover .bg{
+            width:100%;
+            height:100%;
+            background:#666;
+            opacity:0.5;
+        }
+        .con .gmaeover .tip{
+            position: absolute;
+            width:100%;
+            height:40px;
+            left:0;
+            top:50%;
+            margin-top:-20px;
+            line-height: 40px;
+            color:#fff;
+            font-size: 40px;
+            font-weight:800;
+            text-shadow:0 0 10px #fff;
+        }
+        .con li{
+            width:19px;
+            height:19px;
+            border-right:1px solid #ccc;
+            border-bottom:1px solid #ccc;
+            background:#eee;
+            float:left;
+            cursor: pointer;
+            line-height: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+		.con li.can{
+			background:#ccc;
+			border-right:1px solid gray;
+            border-bottom:1px solid gray;
+		}
+        .con li.null{
+            background:#eee;
+        }
+        .con li.doubt{
+            color:red;
+        }
+        .con li.num1{color:#f00;}
+        .con li.num2{color:#0f0;}
+        .con li.num3{color:#00f;}
+        .con li.num4{color:#f80;}
+        .con li.num5{color:#ff0;}
+        .con li.num6{color:#08f;}
+        .con li.num7{color:#0ff;}
+        .con li.num8{color:#000;}
+        #selectGrade{
+            height:24px;
+            line-height: 24px;
+            padding:1px 3px;
+            margin:5px auto;
+        }
+        .head_con{
+            width:320px;
+            margin:5px auto;
+            padding:5px 0;
+        }
+        .time{
+            float:left;
+            width:120px;
+            margin-top:5px;
+        }
+        .record{
+            float:right;
+            width:120px;
+            margin-top:5px;
+        }
+        .options{
+            margin:0 120px;
+        }
+        .options button{
+            padding:5px 8px;
+            border:none;
+            background:#05f;
+            border-radius:3px;
+            color:#fff;
+            font-size: 16px;
+            cursor:pointer;
+        }
+	.fa.fa-flag{
+		color:red;
+	}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="head_con">
+            <h3 class="grade">请选择难度</h3>
+		<div>
+			<i class="fa fa-certificate"></i><span class="boom"></span>&nbsp;&nbsp;
+			<i class="fa fa-flag"></i><span class="flag"></span>
+		</div>
+            <div class="time">
+            计时<br><span></span>
+            </div>
+            <div class="record">
+                记录<br><span></span>
+            </div>
+            <div class="options">
+                <select name="grade" id="selectGrade" value="请选择">
+                <option value="" id="default">请选择</option>
+                </select>
+                <button class="reset">刷新</button>
+            </div>
+            
+    </div>
+    
+    <ul class="con"></ul>
+</div>
+</body>
+<script src="js/sweep.js"></script>
+</html>

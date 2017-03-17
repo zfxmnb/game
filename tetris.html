@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.84, maximum-scale=1.0, user-scalable=0">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <title>经典俄罗斯方块</title>
+</head>
+<style type="text/css">
+    *{
+        padding:0;
+        margin:0;
+        font-family: MicroSoft YaHei;
+    }
+    #canvas_con{
+        width:320px;
+        height:480px;
+        margin:0 auto;
+        padding:5px;
+        border:1px solid #ccc;
+        background:#666;
+        position: relative;
+    }
+    .title,.option{
+        width:320px;
+        margin:5px auto;
+        font-size:15px;
+        text-align: center;
+        color:#666;
+    }
+    .option{
+        font-size:15px;
+         margin:0 auto;
+    }
+    #canvas{
+        width:320px;
+        height:480px;
+        background:#888;
+    }
+    #scores{
+        color:red;
+        font-size:18px;
+    }
+    #pause,#reset{
+        border:none;
+        border-radius:5px;
+        padding:5px;
+        margin:5px;
+        background:#39f;
+        color:#fff;
+        font-size: 16px;
+        cursor:pointer;
+    }
+    #tip{
+        position: absolute;
+        top:0;
+        right:-100px;
+        border:2px solid #ddd;
+        width:80px;
+        height:80px;
+    }
+    .control button{
+        border:none;
+        border-radius:5px;
+        padding:5px;
+        width:60px;
+        margin:5px;
+        background:#39f;
+        color:#fff;
+        font-size: 16px;
+        cursor:pointer;
+    }
+    @media only screen and (max-width: 420px){
+        #tip{
+            display:none;
+        }
+    }
+</style>
+<body>
+    <div class="title">分数: <span id="scores"></span></div>
+    <div id="canvas_con">
+        <canvas id="canvas" width="320" height="480"></canvas>
+        <canvas id="tip" width="80" height="80"></canvas>
+    </div>
+    <div class="option"><button id="reset">重置</button><button id="pause">暂停</button></div>
+    <div class="option control">
+        <button id="left">左</button>
+        <button id="down">下</button>
+        <button id="change">转</button>
+        <button id="right">右</button>
+    </div>
+</body>
+<script type="text/javascript" src="js/tetris.js"></script>
+</html>

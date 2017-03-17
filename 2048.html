@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2048 ?</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"> 
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <script src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            font-family: MicroSoft YaHei,Arial;
+        }
+        ul{
+            list-style-type: none;
+        }
+        .container{
+            width:324px;
+            height:400px;
+            position: fixed;
+            left:50%;
+            margin-left:-162px;
+            top:50%;
+            margin-top:-200px;
+        }
+        .container ul{
+            width:320px;
+            height:320px;
+            border:2px solid #eee;
+            border-radius:2px;
+            background:#ddd;
+        }
+        .container ul li{
+            width:80px;
+            height:80px;
+            float:left;
+            box-shadow: 0 0 10px  #ccc inset;
+        }
+        .container ul li div{
+            width: 74px;
+            height: 74px;
+            margin: 3px;
+            border-radius: 3px;
+            color: #fff;
+            text-shadow:0 0 8px #666;
+            line-height: 74px;
+            font-size: 20px;
+            text-align: center;
+            position:absolute; 
+			-webkit-will-change:left,top,opacity;
+            will-change:left,top,opacity;
+        }
+		.rT{
+			-webkit-transition:opacity 0.3s;
+			transition:opacity 0.3s;
+		}
+        .container ul.transition div{
+            -webkit-transition:left 0.3s,right 0.3s,top 0.3s,bottom 0.3s;
+           transition:left 0.3s,right 0.3s,top 0.3s,bottom 0.3s;
+        }
+        .hide{
+            opacity:0;
+        }
+        .show{
+            opacity:1;
+			background:-webkit-radial-gradient(circle,red,yellow,lightgreen);
+			background:radial-gradient(circle,red,yellow,lightgreen);
+        }
+    .hscore{
+        width:150px;
+        float:left;
+        line-height: 32px;
+        font-size: 16px;
+        margin:5px;
+    }
+    .nscore{
+        width:140px;
+        float:right;
+        text-align: right;
+        line-height: 32px;
+        font-size: 16px;
+        margin:5px;
+    }
+    .reset{
+        width:32px;
+        height:32px;
+        display: block;
+        line-height: 32px;
+        text-align: center;
+        border:none;
+        margin:30px auto;
+        border-radius:50%;
+        background:rgb(20,150,250);
+        box-shadow: 0 0 10px rgb(20,90,250) inset;
+        text-shadow: 0 0 5px #fff;
+        font-size:20px;
+        color:#fff;
+    }
+    .x2{background:#efce19;font-size:36px !important;}
+    .x4{background:#d69c4a;font-size:36px !important;}
+    .x8{background:#ef9c94;font-size:36px !important;}
+    .x16{background:#63bd84;font-size:36px !important;}
+    .x32{ background:#00adce;font-size:36px !important;}
+    .x64{background:#ef1063;font-size:36px !important;}
+    .x128{background:#ff6b00;font-size:30px !important;}
+    .x256{background:#5a3a5a;font-size:30px !important;}
+    .x512{background:#ad2919;font-size:30px !important;}
+    .x1024{background:#3a3184;font-size:24px !important;}
+    .x2048{background:#292931;font-size:24px !important;}
+    .x4096{ background:#9400d3;font-size:24px !important;}
+	.x8192{ background:#000;font-size:24px !important;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul class="li_con">
+            
+        </ul>
+        <div class="hscore">历史最高：<span></span></div>
+        <div class="nscore">当前分数：<span></span></div>
+        <button class="reset">R</button>
+    </div>
+    <script src="js/2048.js"></script>
+</body>
+</html>

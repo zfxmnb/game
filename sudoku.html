@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=0.9,user-scalable=no"> 
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <title>数独</title>
+    <script src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            font-family: MicroSoft YaHei,Arial;
+            -webkit-user-select:none;
+            user-select:none;
+        }
+        .con{
+            width:330px;
+            position: fixed;
+            left:50%;
+            margin-left:-165px;
+			top:50%;
+            margin-top:-250px;
+        }
+        .time{
+            height:30px;
+            line-height: 30px;
+        }
+        .time .now{
+            width:160px;
+            float:left;
+        }
+        .time .history{
+            width:160px;
+            float:right;
+            text-align:right;
+        }
+        .container{
+            width:330px;
+            height:330px;
+            border-left:1px solid gray;
+            border-top:1px solid gray;
+            box-shadow:0 0 5px #000;
+            
+        }
+        .options{
+            margin:5px;
+            text-align: center;
+        }
+        .options button{
+            border:none;
+            background:#3385ff;
+            color:#fff;
+            padding:5px 10px;
+            font-size: 16px;
+            font-weight:600;
+            margin:0 5px;
+            cursor:pointer;
+            border-radius:5px;
+        }
+        .options button.curr,.inputButton ul li.curr{
+            background: #0aa770;
+        }
+        .container ul{
+            list-style-type: none;
+            width:108px;
+            border:1px solid #333;
+            float:left;
+        }
+        .container li{
+            cursor:pointer;
+            width:35px;
+            height:35px;
+            line-height: 35px;
+            text-align: center;
+            float:left;
+            border-right:1px solid gray;
+            border-bottom:1px solid gray;
+        }
+        .container li.fixed{
+            background:#ddd;
+        }
+        .container ul:nth-child(odd){
+            background:#fefefe;
+        }
+        .container .tips{
+            height:100%;
+            width:100%;
+            line-height:330px;
+            text-align:center;
+            color:#f50;
+            font-size:24px;
+            font-weight: 600;
+        }
+        .options .result{
+            display: inline-block;
+            background:#0aa770;
+            border-radius:50%;
+            width:36px;
+            height:36px;
+            line-height: 36px;
+            padding:0;
+            color:#fff;
+            margin:0 10px;
+			cursor:pointer;
+        }
+		.error{
+            background:#ff5;
+        }
+        .selected{
+            background:lightgreen;
+            box-shadow: 0 0 10px green inset;
+        }
+		.confirm{
+			background:lightblue;
+            box-shadow: 0 0 10px #66f inset;
+		}
+        
+        #input{
+           border:none;
+           line-height: 0px;
+           height:0;
+           position: absolute;
+        }
+        .inputButton{
+            width:100%;
+            height:40px;
+            margin-top:10px;
+        }
+        .inputButton ul{
+            width:330px;
+            margin:0 auto;
+            text-align:center;
+        }
+        .inputButton ul li{
+            width:55px;
+            height:32px;
+            line-height: 32px;
+            margin:2px 3px;
+            display: inline-block;
+            background:#3385ff;
+            color:#fff;
+            border-radius:4px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="con">
+        <div class="options">
+            <a class="result">解</a>
+            <button class="low" data-val=1>初级</button>
+            <button class="middle" data-val=2>中级</button>
+            <button class="high" data-val=3>高级</button> 
+        </div>
+        <div class="time"><div class="now"></div><div class="history"></div></div>
+        <label>
+        <div class="container">
+            <div class="tips">请选择等级进入游戏</div>
+        </div>
+        </label>
+        <input type="text" id="input">
+        <div class="inputButton">
+            <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+                <li>7</li>
+                <li>8</li>
+                <li>9</li>
+                <li class="clear">C</li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script src="js/sudoku.js"></script>
+</html>
