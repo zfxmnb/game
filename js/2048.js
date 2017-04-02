@@ -84,7 +84,7 @@
                 liCon.removeClass("transition");
                 for(var i=0;i<n;i++){
                     for(var j=0;j<n;j++){
-                        if(sumTempArr[i][j])
+                        if(sumTempArr[i]&&sumTempArr[i][j])
                             arr[i][j]=sumTempArr[i][j];
                         else
                             arr[i][j]=0;
@@ -115,7 +115,7 @@
                 liCon.removeClass("transition");
                 for(var i=0;i<n;i++){
                     for(var j=0;j<n;j++){
-                        if(sumTempArr[i][n-1-j])
+                        if(sumTempArr[i]&&sumTempArr[i][n-1-j])
                             arr[i][j]=sumTempArr[i][n-1-j];
                         else
                             arr[i][j]=0;
@@ -146,7 +146,7 @@
                 liCon.removeClass("transition");
                 for(var i=0;i<n;i++){
                     for(var j=0;j<n;j++){
-                        if(sumTempArr[j][i])
+                        if(sumTempArr[j]&&sumTempArr[j][i])
                             arr[i][j]=sumTempArr[j][i];
                         else
                             arr[i][j]=0;
@@ -178,7 +178,7 @@
                 liCon.removeClass("transition");
                 for(var i=0;i<n;i++){
                     for(var j=0;j<n;j++){
-                        if(sumTempArr[j][n-1-i])
+                        if(sumTempArr[j]&&sumTempArr[j][n-1-i])
                             arr[i][j]=sumTempArr[j][n-1-i];
                         else
                             arr[i][j]=0;
